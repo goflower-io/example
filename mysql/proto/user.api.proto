@@ -13,15 +13,15 @@ service UserService {
 
 message User {
     //id字段
-    int64	id = 1 ; // @gotags: json:"id"
+    int64	id = 1 ;
     //名称
-    string	name = 2 ; // @gotags: json:"name"
+    string	name = 2 ;
     //年龄
-    int64	age = 3 ; // @gotags: json:"age"
+    int64	age = 3 ;
     //创建时间
-    string	ctime = 4 ; // @gotags: json:"ctime"
+    string	ctime = 4 ;
     //更新时间
-    string	mtime = 5 ; // @gotags: json:"mtime"  
+    string	mtime = 5 ;  
 }
 
 enum UserField{
@@ -34,28 +34,28 @@ enum UserField{
 }
 
 message UserId{
-    int64 id = 1 ; // @gotags: form:"id"
+    int64 id = 1 ; 
 }
 
 message UpdateUserReq{
-
     User user = 1 ;
-
     repeated string update_mask  = 2 ;
 }
 
 
 message ListUsersReq{
     // number of page
-    int32 page = 1 ;// @gotags: form:"page"
+    int32 page = 1 ;
     // default 20
-    int32 page_size = 2 ;// @gotags: form:"page_size"
+    int32 page_size = 2 ;
     // order by field
-    UserField order_by_field = 3 ; // @gotags: form:"order_by_field"
+    UserField order_by_field = 3 ; 
     // ASC DESC
-    bool order_by_desc = 4; //@gotags: form:"order_by_desc"
+    bool order_by_desc = 4; 
      // filter
-    repeated UserFilter filters = 5 ; //@gotags: form:"filters"
+    repeated UserFilter filters = 5 ; 
+    //  select_fields
+    repeated UserField select_fields = 6; 
 }
 
 message UserFilter{
@@ -65,10 +65,7 @@ message UserFilter{
 }
 
 message ListUsersResp{
-
-    repeated User users = 1 ; // @gotags: json:"users"
-
-    int32 total_count = 2 ; // @gotags: json:"total_count"
-    
-    int32 page_count = 3 ; // @gotags: json:"page_count"
-}
+    repeated User users = 1 ; 
+    int32 total_count = 2 ;   
+    int32 page_count = 3 ; 
+  }

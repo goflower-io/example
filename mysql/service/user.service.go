@@ -2,13 +2,12 @@ package service
 
 import (
 	"context"
-	"math"
-	"strings"
-	"time"
-
 	"github.com/happycrud/example/mysql/api"
 	"github.com/happycrud/example/mysql/crud"
 	"github.com/happycrud/example/mysql/crud/user"
+	"math"
+	"strings"
+	"time"
 
 	"github.com/happycrud/xsql"
 	"google.golang.org/grpc/codes"
@@ -153,8 +152,16 @@ func (s *UserServiceImpl) ListUsers(ctx context.Context, req *api.ListUsersReq) 
 	if offset < 0 {
 		offset = 0
 	}
+	if len(req.GetSelectFields()) == 0 {
+		return nil, status.Error(codes.InvalidArgument, "empty select field")
+	}
+	selectFields := make([]string, 0, len(req.GetSelectFields()))
+	for _, v := range req.GetSelectFields() {
+		selectFields = append(selectFields, strings.TrimPrefix(v.String(), "User_"))
+	}
 	finder := s.Client.User.
 		Find().
+		Select(selectFields...).
 		Offset(offset).
 		Limit(size)
 
