@@ -1,21 +1,21 @@
 module github.com/happycrud/example
 
-go 1.21
+go 1.22
 
 toolchain go1.22.5
 
 require (
 	github.com/go-playground/form v3.1.4+incompatible
+	github.com/go-playground/form/v4 v4.2.1
 	github.com/happycrud/mgo v0.0.0-20230512102854-aea937ead5ab
 	github.com/happycrud/xsql v0.1.0
 	go.mongodb.org/mongo-driver v1.11.6
-	google.golang.org/grpc v1.66.0
+	google.golang.org/grpc v1.64.0
 	google.golang.org/protobuf v1.34.1
 )
 
 require (
 	github.com/go-sql-driver/mysql v1.7.1 // indirect
-	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/golang/snappy v0.0.1 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect
 	github.com/jackc/pgservicefile v0.0.0-20221227161230-091c0ba34f0a // indirect
@@ -35,6 +35,6 @@ require (
 	golang.org/x/sync v0.7.0 // indirect
 	golang.org/x/sys v0.21.0 // indirect
 	golang.org/x/text v0.16.0 // indirect
-	google.golang.org/genproto v0.0.0-20230306155012-7f2fa6fef1f4 // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20240318140521-94a12d6c2237 // indirect
 	gopkg.in/go-playground/assert.v1 v1.2.1 // indirect
 )

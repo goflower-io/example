@@ -2,17 +2,20 @@ package main
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
+	"net/http"
 	"time"
 
-	"github.com/happycrud/example/mysql/crud"
-	"github.com/happycrud/example/mysql/crud/user"
 	"github.com/happycrud/xsql"
+
+	"github.com/happycrud/example/mysql/crud"
+	"github.com/happycrud/example/mysql/service"
 )
 
-var db *crud.Client
-var ctx = context.Background()
+var (
+	db  *crud.Client
+	ctx = context.Background()
+)
 
 func main() {
 	var err error
@@ -28,22 +31,15 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	a := &user.User{
-		Id:    0,
-		Name:  "a",
-		Age:   11,
-		Ctime: time.Now(),
-		Mtime: time.Now(),
-	}
-	db.User.Create().SetUser(a).Save(ctx)
-	fmt.Println(a)
-
-	db.User.Update().SetName("xxx").Where(user.IdOp.EQ(4005)).Save(ctx)
-
-	list, err := db.User.Find().Select().Where(user.AgeOp.EQ(11)).All(ctx)
-	b, _ := json.Marshal(list)
-	fmt.Println(string(b), err)
-
-	db.User.Delete().Where(user.IdOp.EQ(a.Id)).Exec(ctx)
-
+	s := &service.UserServiceImpl{Client: db}
+	hs := service.UserHandler{UserServiceServer: s}
+	mux := http.NewServeMux()
+	hs.AddPath(func(method, path string, hf http.HandlerFunc) {
+		fmt.Println(method + " " + path)
+		mux.HandleFunc(method+" "+path, hf)
+	})
+	mux.HandleFunc("GET /index", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprint(w, "hello world")
+	})
+	http.ListenAndServe("0.0.0.0:8088", mux)
 }
