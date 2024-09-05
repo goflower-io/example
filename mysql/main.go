@@ -8,8 +8,10 @@ import (
 
 	"github.com/happycrud/xsql"
 
+	"github.com/happycrud/example/mysql/api"
 	"github.com/happycrud/example/mysql/crud"
 	"github.com/happycrud/example/mysql/service"
+	"github.com/happycrud/example/mysql/views"
 )
 
 var (
@@ -39,7 +41,12 @@ func main() {
 		mux.HandleFunc(method+" "+path, hf)
 	})
 	mux.HandleFunc("GET /index", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprint(w, "hello world")
+		a := &api.User{
+			Id:   1,
+			Name: "ddd",
+			Age:  100,
+		}
+		views.UserUpdateView(a).Render(r.Context(), w)
 	})
 	http.ListenAndServe("0.0.0.0:8088", mux)
 }

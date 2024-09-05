@@ -2,6 +2,9 @@ package service
 
 import (
 	"context"
+	"github.com/happycrud/example/mysql/api"
+	"github.com/happycrud/example/mysql/crud"
+	"github.com/happycrud/example/mysql/crud/user"
 	"math"
 	"strings"
 	"time"
@@ -10,10 +13,6 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
-
-	"github.com/happycrud/example/mysql/api"
-	"github.com/happycrud/example/mysql/crud"
-	"github.com/happycrud/example/mysql/crud/user"
 )
 
 // UserServiceImpl UserServiceImpl
@@ -89,17 +88,17 @@ func (s *UserServiceImpl) UpdateUser(ctx context.Context, req *api.UpdateUserReq
 	update := s.Client.User.Update()
 	for _, v := range req.GetUpdateMask() {
 		switch v {
-		case user.Name:
+		case api.UserField_User_name:
 			update.SetName(req.GetUser().GetName())
-		case user.Age:
+		case api.UserField_User_age:
 			update.SetAge(req.GetUser().GetAge())
-		case user.Ctime:
+		case api.UserField_User_ctime:
 			t, err := time.ParseInLocation("2006-01-02 15:04:05", req.GetUser().GetCtime(), time.Local)
 			if err != nil {
 				return nil, status.Error(codes.InvalidArgument, err.Error())
 			}
 			update.SetCtime(t)
-		case user.Mtime:
+		case api.UserField_User_mtime:
 			t, err := time.ParseInLocation("2006-01-02 15:04:05", req.GetUser().GetMtime(), time.Local)
 			if err != nil {
 				return nil, status.Error(codes.InvalidArgument, err.Error())

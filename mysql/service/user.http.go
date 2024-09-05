@@ -36,7 +36,10 @@ func (h *UserHandler) ListUsersHandle(w http.ResponseWriter, req *http.Request) 
 
 		return
 	}
-
+	// 根据accpet来判断是返回什么类型的数据
+	// html page
+	// json
+	// htmx
 	fmt.Fprintf(w, "%v", resp)
 }
 
@@ -53,16 +56,24 @@ func (h *UserHandler) GetUserHandle(w http.ResponseWriter, req *http.Request) {
 
 		return
 	}
+	// html
+	// htmx
+	// json
 	fmt.Fprintf(w, "%v", resp)
 }
 
 func (h *UserHandler) UpdateUserHandle(w http.ResponseWriter, req *http.Request) {
+	// 根据方法GET POST 来确定
+	// GET return html htmx
+	// POST return htmx
+	//
+
 	reqb := new(api.UpdateUserReq)
 	if err := GetRequestBody(reqb, req); err != nil {
 		fmt.Fprint(w, err.Error())
-
 		return
 	}
+	fmt.Printf("%v+v", reqb)
 	resp, err := h.UserServiceServer.UpdateUser(req.Context(), reqb)
 	if err != nil {
 		fmt.Fprint(w, err.Error())
@@ -73,13 +84,14 @@ func (h *UserHandler) UpdateUserHandle(w http.ResponseWriter, req *http.Request)
 }
 
 func (h *UserHandler) DeleteUserHandle(w http.ResponseWriter, req *http.Request) {
+	// DELETE htmx
 	reqb := new(api.UserId)
 	if err := GetRequestBody(reqb, req); err != nil {
 		fmt.Fprint(w, err.Error())
 
 		return
 	}
-	resp, err := h.UserServiceServer.GetUser(req.Context(), reqb)
+	resp, err := h.UserServiceServer.DeleteUser(req.Context(), reqb)
 	if err != nil {
 		fmt.Fprint(w, err.Error())
 
@@ -89,6 +101,9 @@ func (h *UserHandler) DeleteUserHandle(w http.ResponseWriter, req *http.Request)
 }
 
 func (h *UserHandler) CreateUserHandle(w http.ResponseWriter, req *http.Request) {
+	// PUT return htmx
+	// GET return html htmx
+
 	reqb := new(api.User)
 	if err := GetRequestBody(reqb, req); err != nil {
 		fmt.Fprint(w, err.Error())

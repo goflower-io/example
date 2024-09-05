@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"net/http"
 	"net/url"
 
 	"github.com/go-playground/form"
@@ -20,7 +19,7 @@ func main() {
 			"UpdateMask[1]": []string{"name"},
 		},
 	)
-	fmt.Printf("%+v", a)
+	fmt.Printf("%+v", &a)
 
 	b := api.UserFilter{}
 	decode.Decode(&b, url.Values{
@@ -28,5 +27,5 @@ func main() {
 		"Op":    []string{"="},
 		"Value": []string{"1"},
 	})
-	fmt.Printf("%+v", b)
+	fmt.Printf("%+v", &b)
 }

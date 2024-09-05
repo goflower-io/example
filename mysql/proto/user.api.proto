@@ -39,7 +39,7 @@ message UserId{
 
 message UpdateUserReq{
     User user = 1 ;
-    repeated string update_mask  = 2 ;
+    repeated UserField update_mask  = 2 ;
 }
 
 

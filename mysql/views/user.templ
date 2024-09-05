@@ -1,0 +1,96 @@
+package views
+
+import "github.com/happycrud/example/mysql/api"
+import "strconv"
+
+templ UserListView(resp *api.ListUsersResp) {
+	<div>
+		for _,user :=range resp.GetUsers() {
+			@UserItemView(user)
+		}
+	</div>
+}
+
+templ UserItemView(user *api.User) {
+	<div>{ user.Name }</div>
+}
+
+templ UserDetailView(user *api.User) {
+	<div>{ user.Name }</div>
+}
+
+templ Index() {
+	<html>
+		<script src="https://unpkg.com/htmx.org@2.0.2" integrity="sha384-Y7hw+L/jvKeWIRRkqWYfPcvVxHzVzn5REgzbawhxAuQGwX1XWe70vji+VSeHOThJ" crossorigin="anonymous"></script>
+		<body>
+			{ children... }
+		</body>
+	</html>
+}
+
+templ UserCreateView() {
+	@Index() {
+		<form
+			hx-boost="true"
+			hx-put="/UserService/CreateUser"
+			hx-target="this"
+			hx-swap="outerHTML"
+		>
+			<input type="text" id="User.Id" name="User.Id" disabled/>
+			<input
+				type="text"
+				name="User.Name"
+			/>
+			<input
+				type="number"
+				name="User.Age"
+			/>
+			<input type="submit" value="submit"/>
+		</form>
+	}
+}
+
+templ UserUpdateView(user *api.User) {
+	@Index() {
+		<form
+			hx-boost="true"
+			hx-post={ "/UserService/UpdateUser?User.Id=" + strconv.Itoa(int(user.Id)) }
+			hx-target="this"
+			hx-swap="outerHTML"
+		>
+			<div>
+				<lable for="User.Id">Id:</lable>
+				<input
+					disabled
+					type="text"
+					id="User.Id"
+					name="User.Id"
+					value={ strconv.Itoa(int(user.Id)) }
+				/>
+			</div>
+			<div>
+				<lable for="User.Name">Name:</lable>
+				<input
+					type="text"
+					id="User.Name"
+					name="User.Name"
+					value={ user.Name }
+					hx-on:change="document.getElementById('User.Name.Mask').value = '2'; "
+				/>
+			</div>
+			<div>
+				<lable for="User.Age">Age:</lable>
+				<input
+					type="number"
+					id="User.Age"
+					name="User.Age"
+					value={ strconv.Itoa(int(user.Age)) }
+					hx-on:change="document.getElementById('User.Age.Mask').value = '3'"
+				/>
+			</div>
+			<input type="submit" value="submit"/>
+			<input hidden id="User.Name.Mask" name="UpdateMask"/>
+			<input hidden id="User.Age.Mask" name="UpdateMask"/>
+		</form>
+	}
+}
