@@ -9,7 +9,7 @@ require (
 	github.com/go-playground/form v3.1.4+incompatible
 	github.com/go-playground/form/v4 v4.2.1
 	github.com/happycrud/mgo v0.0.0-20230512102854-aea937ead5ab
-	github.com/happycrud/xsql v0.1.0
+	github.com/happycrud/xsql v0.1.1
 	go.mongodb.org/mongo-driver v1.11.6
 	google.golang.org/grpc v1.64.0
 	google.golang.org/protobuf v1.34.1

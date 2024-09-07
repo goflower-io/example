@@ -12,7 +12,7 @@ import (
 type User struct {
 	Id    int64     `json:"id"`    //
 	Name  string    `json:"name"`  //
-	Age   int64     `json:"age"`   //
+	Age   []int32   `json:"age"`   //
 	Ctime time.Time `json:"ctime"` //
 	Mtime time.Time `json:"mtime"` //
 }
@@ -72,7 +72,7 @@ func (u *User) ScanDst(aa any, columns []string) []any {
 			case Name:
 				dst = append(dst, &a.Name)
 			case Age:
-				dst = append(dst, &a.Age)
+				dst = append(dst, xsql.PgxMap().SQLScanner(&a.Age))
 			case Ctime:
 				dst = append(dst, &a.Ctime)
 			case Mtime:
@@ -131,8 +131,6 @@ const (
 
 	NameOp = xsql.StrFieldOp(Name)
 
-	AgeOp = xsql.FieldOp[int64](Age)
-
 	CtimeOp = xsql.FieldOp[string](Ctime)
 
 	MtimeOp = xsql.FieldOp[string](Mtime)
@@ -185,13 +183,8 @@ func (u *Updater) SetName(arg string) *Updater {
 	return u
 }
 
-func (u *Updater) SetAge(arg int64) *Updater {
+func (u *Updater) SetAge(arg []int32) *Updater {
 	u.Set(Age, arg)
-	return u
-}
-
-func (u *Updater) AddAge(arg interface{}) *Updater {
-	u.Add(Age, arg)
 	return u
 }
 

@@ -34,7 +34,7 @@ func main() {
 		panic(err)
 	}
 	s := &service.UserServiceImpl{Client: db}
-	hs := service.UserHandler{UserServiceServer: s}
+	hs := service.NewUserHandler(s)
 	mux := http.NewServeMux()
 	hs.AddPath(func(method, path string, hf http.HandlerFunc) {
 		fmt.Println(method + " " + path)
