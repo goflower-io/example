@@ -16,6 +16,8 @@ github.com/golang/snappy v0.0.1/go.mod h1:/XxbfmMg8lxefKM7IXC3fBNl/7bRcc72aCRzEW
 github.com/google/go-cmp v0.5.2/go.mod h1:v8dTdLbMG2kIc/vJvl+f65V22dbkXbowE6jgT/gNBxE=
 github.com/google/go-cmp v0.6.0 h1:ofyhxvXcZhMsU5ulbFiLKl/XBFqE1GSq7atu8tAmTRI=
 github.com/google/go-cmp v0.6.0/go.mod h1:17dUlkBOakJ0+DkrSSNjCkIjxS6bF9zb3elmeNGIjoY=
+github.com/happycrud/golib v0.0.4-0.20240907122722-a23d063a5c61 h1:WZ+DpVxZs5DNSbEzmtMHAzvNTR6zG9E2P1Hm+lA+SOI=
+github.com/happycrud/golib v0.0.4-0.20240907122722-a23d063a5c61/go.mod h1:i0a2WSTUvOVyZU98voXlVmQBJQQax7iP0inFziAmDN4=
 github.com/happycrud/mgo v0.0.0-20230512102854-aea937ead5ab h1:uuGgw/zQBTKKbptCQL93XcSEkHH8/8Xd1ylxI22LQyA=
 github.com/happycrud/mgo v0.0.0-20230512102854-aea937ead5ab/go.mod h1:bHIUi7peQ2AvUsUUq46PpxVyfAczcA0qzeihMtbF1Kw=
 github.com/happycrud/xsql v0.1.0 h1:o34284j8Hsv+MhoQccPYhG/nHyX5Y+D/PQSBA5UbFH4=

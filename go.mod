@@ -1,6 +1,6 @@
 module github.com/happycrud/example
 
-go 1.22
+go 1.22.3
 
 toolchain go1.22.5
 
@@ -18,6 +18,7 @@ require (
 require (
 	github.com/go-sql-driver/mysql v1.7.1 // indirect
 	github.com/golang/snappy v0.0.1 // indirect
+	github.com/happycrud/golib v0.0.4-0.20240907122722-a23d063a5c61 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect
 	github.com/jackc/pgservicefile v0.0.0-20221227161230-091c0ba34f0a // indirect
 	github.com/jackc/pgx/v5 v5.3.1 // indirect

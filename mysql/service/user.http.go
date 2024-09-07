@@ -2,11 +2,9 @@ package service
 
 import (
 	"encoding/json"
-	"io"
 	"net/http"
-	"sync"
 
-	form "github.com/go-playground/form/v4"
+	h1 "github.com/happycrud/golib/net/http"
 
 	"github.com/happycrud/example/mysql/api"
 	"github.com/happycrud/example/mysql/views"
@@ -47,7 +45,7 @@ func (h *UserHandler) AddPath(addPathFn func(method, path string, hf http.Handle
 
 func (h *UserHandler) ListUsersHandle(w http.ResponseWriter, req *http.Request) {
 	reqb := new(api.ListUsersReq)
-	if err := GetRequestParams(reqb, req); err != nil {
+	if err := h1.GetRequestParams(reqb, req); err != nil {
 		h.Error(w, err)
 		return
 	}
@@ -56,20 +54,20 @@ func (h *UserHandler) ListUsersHandle(w http.ResponseWriter, req *http.Request) 
 		h.Error(w, err)
 		return
 	}
-	switch ResponseConentType(req) {
-	case ResponseJSON:
+	switch h1.ResponseConentType(req) {
+	case h1.ResponseJSON:
 		d, _ := json.Marshal(resp)
 		w.Write(d)
-	case ResponseHTMX:
+	case h1.ResponseHTMX:
 		views.UserListView(resp).Render(req.Context(), w)
-	case ResponseHTML:
+	case h1.ResponseHTML:
 		views.UserListPage(resp).Render(req.Context(), w)
 	}
 }
 
 func (h *UserHandler) GetUserHandle(w http.ResponseWriter, req *http.Request) {
 	reqb := new(api.UserId)
-	if err := GetRequestParams(reqb, req); err != nil {
+	if err := h1.GetRequestParams(reqb, req); err != nil {
 		h.Error(w, err)
 		return
 	}
@@ -78,13 +76,13 @@ func (h *UserHandler) GetUserHandle(w http.ResponseWriter, req *http.Request) {
 		h.Error(w, err)
 		return
 	}
-	switch ResponseConentType(req) {
-	case ResponseJSON:
+	switch h1.ResponseConentType(req) {
+	case h1.ResponseJSON:
 		d, _ := json.Marshal(resp)
 		w.Write(d)
-	case ResponseHTMX:
+	case h1.ResponseHTMX:
 		views.UserDetailView(resp).Render(req.Context(), w)
-	case ResponseHTML:
+	case h1.ResponseHTML:
 		views.UserDetailPage(resp).Render(req.Context(), w)
 	}
 }
@@ -93,7 +91,7 @@ func (h *UserHandler) UpdateUserHandle(w http.ResponseWriter, req *http.Request)
 	// 区分是GET还是POST方法
 	if req.Method == http.MethodGet {
 		reqb := new(api.UserId)
-		if err := GetRequestParams(reqb, req); err != nil {
+		if err := h1.GetRequestParams(reqb, req); err != nil {
 			h.Error(w, err)
 			return
 		}
@@ -102,8 +100,8 @@ func (h *UserHandler) UpdateUserHandle(w http.ResponseWriter, req *http.Request)
 			h.Error(w, err)
 			return
 		}
-		switch ResponseConentType(req) {
-		case ResponseHTMX:
+		switch h1.ResponseConentType(req) {
+		case h1.ResponseHTMX:
 			views.UserUpdateView(resp).Render(req.Context(), w)
 		default:
 			views.UserUpdatePage(resp).Render(req.Context(), w)
@@ -111,7 +109,7 @@ func (h *UserHandler) UpdateUserHandle(w http.ResponseWriter, req *http.Request)
 		return
 	}
 	reqb := new(api.UpdateUserReq)
-	if err := GetRequestParams(reqb, req); err != nil {
+	if err := h1.GetRequestParams(reqb, req); err != nil {
 		h.Error(w, err)
 		return
 	}
@@ -125,7 +123,7 @@ func (h *UserHandler) UpdateUserHandle(w http.ResponseWriter, req *http.Request)
 
 func (h *UserHandler) DeleteUserHandle(w http.ResponseWriter, req *http.Request) {
 	reqb := new(api.UserId)
-	if err := GetRequestParams(reqb, req); err != nil {
+	if err := h1.GetRequestParams(reqb, req); err != nil {
 		h.Error(w, err)
 		return
 	}
@@ -140,8 +138,8 @@ func (h *UserHandler) DeleteUserHandle(w http.ResponseWriter, req *http.Request)
 func (h *UserHandler) CreateUserHandle(w http.ResponseWriter, req *http.Request) {
 	// 区分是 GET还是PUT方法
 	if req.Method == http.MethodGet {
-		switch ResponseConentType(req) {
-		case ResponseHTMX:
+		switch h1.ResponseConentType(req) {
+		case h1.ResponseHTMX:
 			views.UserCreateView().Render(req.Context(), w)
 		default:
 			views.UserCreateView().Render(req.Context(), w)
@@ -149,7 +147,7 @@ func (h *UserHandler) CreateUserHandle(w http.ResponseWriter, req *http.Request)
 		return
 	}
 	reqb := new(api.User)
-	if err := GetRequestParams(reqb, req); err != nil {
+	if err := h1.GetRequestParams(reqb, req); err != nil {
 		h.Error(w, err)
 		return
 	}
@@ -159,51 +157,4 @@ func (h *UserHandler) CreateUserHandle(w http.ResponseWriter, req *http.Request)
 		return
 	}
 	h.Success(w, "User Created")
-}
-
-var formParser = sync.OnceValue(func() *form.Decoder {
-	return form.NewDecoder()
-})
-
-func ResponseConentType(req *http.Request) ResponseType {
-	if req.Header.Get("Accept") == "application/json" {
-		return ResponseJSON
-	}
-	if req.Header.Get("HX-Request") == "true" {
-		return ResponseHTMX
-	}
-	return ResponseHTML
-}
-
-type ResponseType string
-
-const (
-	ResponseJSON ResponseType = "json"
-	ResponseHTML ResponseType = "html"
-	ResponseHTMX ResponseType = "htmx"
-)
-
-func GetRequestParams(reqb any, req *http.Request) error {
-	contentType := req.Header.Get("Content-Type")
-	switch contentType {
-	case "application/json":
-		var body []byte
-		body, err := io.ReadAll(req.Body)
-		if err != nil {
-			return err
-		}
-
-		if err = json.Unmarshal(body, reqb); err != nil {
-			return err
-		}
-	default:
-		// "application/x-www-form-urlencoded":
-		if err := req.ParseForm(); err != nil {
-			return err
-		}
-		if err := formParser().Decode(reqb, req.Form); err != nil {
-			return err
-		}
-	}
-	return nil
 }
