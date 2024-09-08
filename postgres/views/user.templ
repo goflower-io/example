@@ -5,9 +5,11 @@ import "fmt"
 import "github.com/happycrud/example/postgres/api"
 
 templ UserShell() {
-	<div>
-		{ children... }
-	</div>
+	@Index() {
+		<div>
+			{ children... }
+		</div>
+	}
 }
 
 templ UserListPage(resp *api.ListUsersResp) {
@@ -75,7 +77,7 @@ templ UserCreateView() {
 }
 
 templ UserUpdatePage(a *api.User) {
-	@UserShell() {
+	@Index() {
 		@UserUpdateView(a)
 	}
 }

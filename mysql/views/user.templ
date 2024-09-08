@@ -1,16 +1,15 @@
+
 package views
 
-import "github.com/happycrud/example/mysql/api"
-import "strconv"
 import "fmt"
+import "github.com/happycrud/example/mysql/api"
 
 templ UserShell() {
-	<html>
-		<script src="https://unpkg.com/htmx.org@2.0.2" integrity="sha384-Y7hw+L/jvKeWIRRkqWYfPcvVxHzVzn5REgzbawhxAuQGwX1XWe70vji+VSeHOThJ" crossorigin="anonymous"></script>
-		<body>
+	@Index() {
+		<div>
 			{ children... }
-		</body>
-	</html>
+		</div>
+	}
 }
 
 templ UserListPage(resp *api.ListUsersResp) {
@@ -21,26 +20,26 @@ templ UserListPage(resp *api.ListUsersResp) {
 
 templ UserListView(resp *api.ListUsersResp) {
 	<div id="UserListView">
-		for idx,user :=range resp.GetUsers() {
-			@UserItemView(idx, user)
+		for idx,a :=range resp.GetUsers() {
+			@UserItemView(idx, a)
 		}
 	</div>
 }
 
-templ UserItemView(idx int, user *api.User) {
+templ UserItemView(idx int, a *api.User) {
 	<div id={ fmt.Sprintf("UserItem_%d", idx) }>
-		{ user.Name }
+		// todo
 	</div>
 }
 
-templ UserDetailPage(user *api.User) {
+templ UserDetailPage(a *api.User) {
 	@UserShell() {
-		@UserDetailView(user)
+		@UserDetailView(a)
 	}
 }
 
-templ UserDetailView(user *api.User) {
-	<div>{ user.Name }</div>
+templ UserDetailView(a *api.User) {
+	<div></div>
 }
 
 templ UserCreatePage() {
@@ -62,23 +61,33 @@ templ UserCreateView() {
 			name="User.Name"
 		/>
 		<input
-			type="number"
+			type="text"
 			name="User.Age"
+		/>
+		<input
+			type="text"
+			name="User.Ctime"
+		/>
+		<input
+			type="text"
+			name="User.Mtime"
 		/>
 		<input type="submit" value="submit"/>
 	</form>
 }
 
-templ UserUpdatePage(user *api.User) {
-	@UserShell() {
-		@UserUpdateView(user)
+templ UserUpdatePage(a *api.User) {
+	@Index() {
+		@UserShell() {
+			@UserUpdateView(a)
+		}
 	}
 }
 
-templ UserUpdateView(user *api.User) {
+templ UserUpdateView(a *api.User) {
 	<form
 		hx-boost="true"
-		hx-post={ "/UserService/UpdateUser?User.Id=" + strconv.Itoa(int(user.Id)) }
+		hx-post={ "/UserService/UpdateUser?User.Id=" + fmt.Sprintf("%d", a.Id) }
 		hx-target="this"
 		hx-swap="outerHTML"
 	>
@@ -89,7 +98,7 @@ templ UserUpdateView(user *api.User) {
 				type="text"
 				id="User.Id"
 				name="User.Id"
-				value={ strconv.Itoa(int(user.Id)) }
+				value={ fmt.Sprintf("%d", a.Id) }
 			/>
 		</div>
 		<div>
@@ -98,22 +107,44 @@ templ UserUpdateView(user *api.User) {
 				type="text"
 				id="User.Name"
 				name="User.Name"
-				value={ user.Name }
-				hx-on:change="document.getElementById('User.Name.Mask').value = '2'; "
+				value={ fmt.Sprintf("%v", a.Name) }
+				hx-on:change="document.getElementById('User.Name.Mask').value = '2';"
 			/>
 		</div>
 		<div>
 			<lable for="User.Age">Age:</lable>
 			<input
-				type="number"
+				type="text"
 				id="User.Age"
 				name="User.Age"
-				value={ strconv.Itoa(int(user.Age)) }
-				hx-on:change="document.getElementById('User.Age.Mask').value = '3'"
+				value={ fmt.Sprintf("%v", a.Age) }
+				hx-on:change="document.getElementById('User.Age.Mask').value = '3';"
+			/>
+		</div>
+		<div>
+			<lable for="User.Ctime">Ctime:</lable>
+			<input
+				type="text"
+				id="User.Ctime"
+				name="User.Ctime"
+				value={ fmt.Sprintf("%v", a.Ctime) }
+				hx-on:change="document.getElementById('User.Ctime.Mask').value = '4';"
+			/>
+		</div>
+		<div>
+			<lable for="User.Mtime">Mtime:</lable>
+			<input
+				type="text"
+				id="User.Mtime"
+				name="User.Mtime"
+				value={ fmt.Sprintf("%v", a.Mtime) }
+				hx-on:change="document.getElementById('User.Mtime.Mask').value = '5';"
 			/>
 		</div>
 		<input type="submit" value="submit"/>
 		<input hidden id="User.Name.Mask" name="UpdateMask"/>
 		<input hidden id="User.Age.Mask" name="UpdateMask"/>
+		<input hidden id="User.Ctime.Mask" name="UpdateMask"/>
+		<input hidden id="User.Mtime.Mask" name="UpdateMask"/>
 	</form>
 }

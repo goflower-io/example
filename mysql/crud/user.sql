@@ -1,6 +1,6 @@
 CREATE TABLE `user` (
-    `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'id字段',
-    `name` varchar(100) NOT NULL COMMENT '名称',
+    `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'id|number|validate:"required"',
+    `name` varchar(100) NOT NULL COMMENT '名称|text|validate:"max=100,min=10"',
     `age` int(11) NOT NULL DEFAULT '0' COMMENT '年龄',
     `ctime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `mtime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
