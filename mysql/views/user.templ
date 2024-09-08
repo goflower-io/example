@@ -56,21 +56,21 @@ templ UserCreateView() {
     hx-target="this"
 		hx-swap="outerHTML"
 	>
-		<input type="text" id="User.Id" name="User.Id" disabled/> 
+		<input type="number" id="User.Id" name="User.Id" disabled/> 
     <input
-			type="text"
+		  type="text"
 			name="User.Name"
 		/> 
     <input
-			type="text"
+		  type="text"
 			name="User.Age"
 		/> 
     <input
-			type="text"
+		  type="text"
 			name="User.Ctime"
 		/> 
     <input
-			type="text"
+		  type="text"
 			name="User.Mtime"
 		/>
 		<input type="submit" value="submit"/>
@@ -94,7 +94,7 @@ templ UserUpdateView(a *api.User) {
 			<lable for="User.Id">Id:</lable>
 			<input
 				disabled
-				type="text"
+				type="number"
 				id="User.Id"
 				name="User.Id"
 				value={ fmt.Sprintf("%d",a.Id) }
