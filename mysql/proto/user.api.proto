@@ -12,7 +12,7 @@ service UserService {
 }
 
 message User {
-    //id字段
+    //id
     int64	id = 1 ;
     //名称
     string	name = 2 ;
@@ -39,29 +39,23 @@ message UserId{
 
 message UpdateUserReq{
     User user = 1 ;
-    repeated UserField update_mask  = 2 ;
+    repeated UserField masks  = 2 ;
 }
 
 
 message ListUsersReq{
-    // number of page
     int32 page = 1 ;
-    // default 20
     int32 page_size = 2 ;
-    // order by field
-    UserField order_by_field = 3 ; 
-    // ASC DESC
-    bool order_by_desc = 4; 
-     // filter
+    UserField orderby = 3 ; 
+    bool desc = 4; 
     repeated UserFilter filters = 5 ; 
-    //  select_fields
-    repeated UserField select_fields = 6; 
+    repeated UserField fields = 6; 
 }
 
 message UserFilter{
      UserField field = 1;
     string op = 2;
-    string value = 3;
+    string val = 3;
 }
 
 message ListUsersResp{

@@ -2,14 +2,15 @@
 package views
 
 import "fmt"
-import "github.com/happycrud/example/mysql/api"
+import 	"github.com/happycrud/example/mysql/api"
+
+
+
 
 templ UserShell() {
-	@Index() {
-		<div>
+	<div>
 			{ children... }
-		</div>
-	}
+	</div>
 }
 
 templ UserListPage(resp *api.ListUsersResp) {
@@ -52,23 +53,23 @@ templ UserCreateView() {
 	<form
 		hx-boost="true"
 		hx-put="/UserService/CreateUser"
-		hx-target="this"
+    hx-target="this"
 		hx-swap="outerHTML"
 	>
-		<input type="text" id="User.Id" name="User.Id" disabled/>
-		<input
+		<input type="text" id="User.Id" name="User.Id" disabled/> 
+    <input
 			type="text"
 			name="User.Name"
-		/>
-		<input
+		/> 
+    <input
 			type="text"
 			name="User.Age"
-		/>
-		<input
+		/> 
+    <input
 			type="text"
 			name="User.Ctime"
-		/>
-		<input
+		/> 
+    <input
 			type="text"
 			name="User.Mtime"
 		/>
@@ -77,18 +78,16 @@ templ UserCreateView() {
 }
 
 templ UserUpdatePage(a *api.User) {
-	@Index() {
-		@UserShell() {
-			@UserUpdateView(a)
-		}
+	@UserShell() {
+		@UserUpdateView(a)
 	}
 }
 
 templ UserUpdateView(a *api.User) {
 	<form
 		hx-boost="true"
-		hx-post={ "/UserService/UpdateUser?User.Id=" + fmt.Sprintf("%d", a.Id) }
-		hx-target="this"
+		hx-post={ "/UserService/UpdateUser?User.Id=" + fmt.Sprintf("%d",a.Id) }
+    hx-target="this"
 		hx-swap="outerHTML"
 	>
 		<div>
@@ -98,53 +97,53 @@ templ UserUpdateView(a *api.User) {
 				type="text"
 				id="User.Id"
 				name="User.Id"
-				value={ fmt.Sprintf("%d", a.Id) }
+				value={ fmt.Sprintf("%d",a.Id) }
 			/>
-		</div>
-		<div>
+		</div> 
+    <div>
 			<lable for="User.Name">Name:</lable>
 			<input
 				type="text"
 				id="User.Name"
 				name="User.Name"
-				value={ fmt.Sprintf("%v", a.Name) }
+				value={ fmt.Sprintf("%v",a.Name) }
 				hx-on:change="document.getElementById('User.Name.Mask').value = '2';"
 			/>
-		</div>
-		<div>
+		</div> 
+    <div>
 			<lable for="User.Age">Age:</lable>
 			<input
 				type="text"
 				id="User.Age"
 				name="User.Age"
-				value={ fmt.Sprintf("%v", a.Age) }
+				value={ fmt.Sprintf("%v",a.Age) }
 				hx-on:change="document.getElementById('User.Age.Mask').value = '3';"
 			/>
-		</div>
-		<div>
+		</div> 
+    <div>
 			<lable for="User.Ctime">Ctime:</lable>
 			<input
 				type="text"
 				id="User.Ctime"
 				name="User.Ctime"
-				value={ fmt.Sprintf("%v", a.Ctime) }
+				value={ fmt.Sprintf("%v",a.Ctime) }
 				hx-on:change="document.getElementById('User.Ctime.Mask').value = '4';"
 			/>
-		</div>
-		<div>
+		</div> 
+    <div>
 			<lable for="User.Mtime">Mtime:</lable>
 			<input
 				type="text"
 				id="User.Mtime"
 				name="User.Mtime"
-				value={ fmt.Sprintf("%v", a.Mtime) }
+				value={ fmt.Sprintf("%v",a.Mtime) }
 				hx-on:change="document.getElementById('User.Mtime.Mask').value = '5';"
 			/>
 		</div>
-		<input type="submit" value="submit"/>
-		<input hidden id="User.Name.Mask" name="UpdateMask"/>
-		<input hidden id="User.Age.Mask" name="UpdateMask"/>
-		<input hidden id="User.Ctime.Mask" name="UpdateMask"/>
-		<input hidden id="User.Mtime.Mask" name="UpdateMask"/>
+		<input type="submit" value="submit"/> 
+		<input hidden id="User.Name.Mask" name="Masks"/> 
+		<input hidden id="User.Age.Mask" name="Masks"/> 
+		<input hidden id="User.Ctime.Mask" name="Masks"/> 
+		<input hidden id="User.Mtime.Mask" name="Masks"/>
 	</form>
 }

@@ -2,9 +2,6 @@ package service
 
 import (
 	"context"
-	"github.com/happycrud/example/mysql/api"
-	"github.com/happycrud/example/mysql/crud"
-	"github.com/happycrud/example/mysql/crud/user"
 	"math"
 	"strings"
 	"time"
@@ -13,6 +10,10 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
+
+	"github.com/happycrud/example/mysql/api"
+	"github.com/happycrud/example/mysql/crud"
+	"github.com/happycrud/example/mysql/crud/user"
 )
 
 // UserServiceImpl UserServiceImpl
@@ -82,11 +83,11 @@ func (s *UserServiceImpl) UpdateUser(ctx context.Context, req *api.UpdateUserReq
 			return nil, err
 		}
 	}
-	if len(req.GetUpdateMask()) == 0 {
+	if len(req.GetMasks()) == 0 {
 		return nil, status.Error(codes.InvalidArgument, "empty filter condition")
 	}
 	update := s.Client.User.Update()
-	for _, v := range req.GetUpdateMask() {
+	for _, v := range req.GetMasks() {
 		switch v {
 		case api.UserField_User_name:
 			update.SetName(req.GetUser().GetName())
@@ -152,11 +153,11 @@ func (s *UserServiceImpl) ListUsers(ctx context.Context, req *api.ListUsersReq) 
 	if offset < 0 {
 		offset = 0
 	}
-	if len(req.GetSelectFields()) == 0 {
+	if len(req.GetFields()) == 0 {
 		return nil, status.Error(codes.InvalidArgument, "empty select field")
 	}
-	selectFields := make([]string, 0, len(req.GetSelectFields()))
-	for _, v := range req.GetSelectFields() {
+	selectFields := make([]string, 0, len(req.GetFields()))
+	for _, v := range req.GetFields() {
 		selectFields = append(selectFields, strings.TrimPrefix(v.String(), "User_"))
 	}
 	finder := s.Client.User.
@@ -165,11 +166,11 @@ func (s *UserServiceImpl) ListUsers(ctx context.Context, req *api.ListUsersReq) 
 		Offset(offset).
 		Limit(size)
 
-	if req.GetOrderByField() == api.UserField_User_unknow {
-		req.OrderByField = api.UserField_User_id
+	if req.GetOrderby() == api.UserField_User_unknow {
+		req.Orderby = api.UserField_User_id
 	}
-	odb := strings.TrimPrefix(req.GetOrderByField().String(), "User_")
-	if req.GetOrderByDesc() {
+	odb := strings.TrimPrefix(req.GetOrderby().String(), "User_")
+	if req.GetDesc() {
 		finder.OrderDesc(odb)
 	} else {
 		finder.OrderAsc(odb)
@@ -180,7 +181,7 @@ func (s *UserServiceImpl) ListUsers(ctx context.Context, req *api.ListUsersReq) 
 
 	var ps []*xsql.Predicate
 	for _, v := range req.GetFilters() {
-		p, err := xsql.GenP(strings.TrimPrefix(v.Field.String(), "User_"), v.Op, v.Value)
+		p, err := xsql.GenP(strings.TrimPrefix(v.Field.String(), "User_"), v.Op, v.Val)
 		if err != nil {
 			return nil, err
 		}

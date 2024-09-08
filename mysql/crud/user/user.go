@@ -10,7 +10,7 @@ import (
 )
 
 type User struct {
-	Id    int64     `json:"id"`    // id字段
+	Id    int64     `json:"id"`    // id
 	Name  string    `json:"name"`  // 名称
 	Age   int64     `json:"age"`   // 年龄
 	Ctime time.Time `json:"ctime"` // 创建时间
@@ -20,7 +20,7 @@ type User struct {
 const (
 	// table tableName is user
 	table = "user"
-	//Id id字段
+	//Id id
 	Id = "id"
 	//Name 名称
 	Name = "name"
