@@ -6,8 +6,8 @@ import (
 
 	h1 "github.com/happycrud/golib/net/http"
 
-	"github.com/happycrud/example/mysql/api"
-	"github.com/happycrud/example/mysql/views"
+	"github.com/happycrud/example/postgres/api"
+	"github.com/happycrud/example/postgres/views"
 )
 
 type UserHandler struct {
@@ -88,7 +88,6 @@ func (h *UserHandler) GetUserHandle(w http.ResponseWriter, req *http.Request) {
 }
 
 func (h *UserHandler) UpdateUserHandle(w http.ResponseWriter, req *http.Request) {
-	// 区分是GET还是POST方法
 	if req.Method == http.MethodGet {
 		reqb := new(api.UserId)
 		if err := h1.GetRequestParams(reqb, req); err != nil {
@@ -136,7 +135,6 @@ func (h *UserHandler) DeleteUserHandle(w http.ResponseWriter, req *http.Request)
 }
 
 func (h *UserHandler) CreateUserHandle(w http.ResponseWriter, req *http.Request) {
-	// 区分是 GET还是PUT方法
 	if req.Method == http.MethodGet {
 		switch h1.ResponseConentType(req) {
 		case h1.ResponseHTMX:
