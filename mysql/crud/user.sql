@@ -2,6 +2,7 @@ CREATE TABLE `user` (
     `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'id|number|validate:"required"',
     `name` varchar(100) NOT NULL COMMENT '名称|text|validate:"max=100,min=10"',
     `age` int(11) NOT NULL DEFAULT '0' COMMENT '年龄',
+    `sex` int(11) NOT NULL DEFAULT '2' COMMENT '性别|select|validate:"oneof=0 1 2"|0:女 1:男 2:无',
     `ctime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `mtime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     PRIMARY KEY (`id`),

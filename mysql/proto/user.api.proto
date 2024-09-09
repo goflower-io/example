@@ -13,15 +13,17 @@ service UserService {
 
 message User {
     //id
-    int64	id = 1 ;
+    int64	id = 1 ; // @gotags: validate:"required"
     //名称
-    string	name = 2 ;
+    string	name = 2 ; // @gotags: validate:"max=100,min=10"
     //年龄
     int64	age = 3 ;
+    //性别
+    int64	sex = 4 ; // @gotags: validate:"oneof=0 1 2"
     //创建时间
-    string	ctime = 4 ;
+    string	ctime = 5 ;
     //更新时间
-    string	mtime = 5 ;  
+    string	mtime = 6 ;  
 }
 
 enum UserField{
@@ -29,8 +31,9 @@ enum UserField{
     User_id = 1;
     User_name = 2;
     User_age = 3;
-    User_ctime = 4;
-    User_mtime = 5;   
+    User_sex = 4;
+    User_ctime = 5;
+    User_mtime = 6;   
 }
 
 message UserId{

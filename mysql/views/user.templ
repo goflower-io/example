@@ -66,6 +66,10 @@ templ UserCreateView() {
 			name="User.Age"
 		/> 
     <input
+		  type="select"
+			name="User.Sex"
+		/> 
+    <input
 		  type="text"
 			name="User.Ctime"
 		/> 
@@ -102,48 +106,60 @@ templ UserUpdateView(a *api.User) {
 		</div> 
     <div>
 			<lable for="User.Name">Name:</lable>
-			<input
+      <input
 				type="text"
 				id="User.Name"
 				name="User.Name"
 				value={ fmt.Sprintf("%v",a.Name) }
-				hx-on:change="document.getElementById('User.Name.Mask').value = '2';"
+				hx-on:change="document.getElementById('User.Name.Mask').checked = true;"
 			/>
 		</div> 
     <div>
 			<lable for="User.Age">Age:</lable>
-			<input
+      <input
 				type="text"
 				id="User.Age"
 				name="User.Age"
 				value={ fmt.Sprintf("%v",a.Age) }
-				hx-on:change="document.getElementById('User.Age.Mask').value = '3';"
+				hx-on:change="document.getElementById('User.Age.Mask').checked = true;"
 			/>
 		</div> 
     <div>
+			<lable for="User.Sex">Sex:</lable>
+      <select 	
+        id="User.Sex"
+				name="User.Sex"
+				>
+         <option value="0">女</option>
+         <option value="1">男</option>
+         <option value="2">无</option>
+      </select>
+		</div> 
+    <div>
 			<lable for="User.Ctime">Ctime:</lable>
-			<input
+      <input
 				type="text"
 				id="User.Ctime"
 				name="User.Ctime"
 				value={ fmt.Sprintf("%v",a.Ctime) }
-				hx-on:change="document.getElementById('User.Ctime.Mask').value = '4';"
+				hx-on:change="document.getElementById('User.Ctime.Mask').checked = true;"
 			/>
 		</div> 
     <div>
 			<lable for="User.Mtime">Mtime:</lable>
-			<input
+      <input
 				type="text"
 				id="User.Mtime"
 				name="User.Mtime"
 				value={ fmt.Sprintf("%v",a.Mtime) }
-				hx-on:change="document.getElementById('User.Mtime.Mask').value = '5';"
+				hx-on:change="document.getElementById('User.Mtime.Mask').checked = true;"
 			/>
 		</div>
 		<input type="submit" value="submit"/> 
-		<input hidden id="User.Name.Mask" name="Masks"/> 
-		<input hidden id="User.Age.Mask" name="Masks"/> 
-		<input hidden id="User.Ctime.Mask" name="Masks"/> 
-		<input hidden id="User.Mtime.Mask" name="Masks"/>
+		<input type="checkbox" value="1" hidden id="User.Name.Mask" name="Masks"/> 
+		<input type="checkbox" value="2" hidden id="User.Age.Mask" name="Masks"/> 
+		<input type="checkbox" value="3" hidden id="User.Sex.Mask" name="Masks"/> 
+		<input type="checkbox" value="4" hidden id="User.Ctime.Mask" name="Masks"/> 
+		<input type="checkbox" value="5" hidden id="User.Mtime.Mask" name="Masks"/>
 	</form>
 }

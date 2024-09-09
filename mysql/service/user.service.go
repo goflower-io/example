@@ -37,6 +37,7 @@ func (s *UserServiceImpl) CreateUser(ctx context.Context, req *api.User) (*api.U
 		Id:    0,
 		Name:  req.GetName(),
 		Age:   req.GetAge(),
+		Sex:   req.GetSex(),
 		Ctime: time.Now(),
 		Mtime: time.Now(),
 	}
@@ -92,6 +93,8 @@ func (s *UserServiceImpl) UpdateUser(ctx context.Context, req *api.UpdateUserReq
 			update.SetName(req.GetUser().GetName())
 		case api.UserField_User_age:
 			update.SetAge(req.GetUser().GetAge())
+		case api.UserField_User_sex:
+			update.SetSex(req.GetUser().GetSex())
 		case api.UserField_User_ctime:
 			t, err := time.ParseInLocation("2006-01-02 15:04:05", req.GetUser().GetCtime(), time.Local)
 			if err != nil {
@@ -209,6 +212,7 @@ func convertUser(a *user.User) *api.User {
 		Id:    a.Id,
 		Name:  a.Name,
 		Age:   a.Age,
+		Sex:   a.Sex,
 		Ctime: a.Ctime.Format("2006-01-02 15:04:05"),
 		Mtime: a.Mtime.Format("2006-01-02 15:04:05"),
 	}

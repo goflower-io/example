@@ -13,6 +13,7 @@ type User struct {
 	Id    int64     `json:"id"`    // id
 	Name  string    `json:"name"`  // 名称
 	Age   int64     `json:"age"`   // 年龄
+	Sex   int64     `json:"sex"`   // 性别
 	Ctime time.Time `json:"ctime"` // 创建时间
 	Mtime time.Time `json:"mtime"` // 更新时间
 }
@@ -26,6 +27,8 @@ const (
 	Name = "name"
 	//Age 年龄
 	Age = "age"
+	//Sex 性别
+	Sex = "sex"
 	//Ctime 创建时间
 	Ctime = "ctime"
 	//Mtime 更新时间
@@ -36,6 +39,7 @@ var columns = []string{
 	Id,
 	Name,
 	Age,
+	Sex,
 	Ctime,
 	Mtime,
 }
@@ -44,6 +48,7 @@ var columnsSet = map[string]struct{}{
 	Id:    {},
 	Name:  {},
 	Age:   {},
+	Sex:   {},
 	Ctime: {},
 	Mtime: {},
 }
@@ -73,6 +78,8 @@ func (u *User) ScanDst(aa any, columns []string) []any {
 				dst = append(dst, &a.Name)
 			case Age:
 				dst = append(dst, &a.Age)
+			case Sex:
+				dst = append(dst, &a.Sex)
 			case Ctime:
 				dst = append(dst, &a.Ctime)
 			case Mtime:
@@ -89,7 +96,7 @@ func (a *User) Values() []any {
 	if a.IsNil() {
 		return []any{}
 	}
-	return []interface{}{a.Id, a.Name, a.Age, a.Ctime, a.Mtime}
+	return []interface{}{a.Id, a.Name, a.Age, a.Sex, a.Ctime, a.Mtime}
 }
 func (a *User) GetAutoIncrPk() (int64, string) {
 
@@ -132,6 +139,8 @@ const (
 	NameOp = xsql.StrFieldOp(Name)
 
 	AgeOp = xsql.FieldOp[int64](Age)
+
+	SexOp = xsql.FieldOp[int64](Sex)
 
 	CtimeOp = xsql.FieldOp[string](Ctime)
 
@@ -192,6 +201,16 @@ func (u *Updater) SetAge(arg int64) *Updater {
 
 func (u *Updater) AddAge(arg interface{}) *Updater {
 	u.Add(Age, arg)
+	return u
+}
+
+func (u *Updater) SetSex(arg int64) *Updater {
+	u.Set(Sex, arg)
+	return u
+}
+
+func (u *Updater) AddSex(arg interface{}) *Updater {
+	u.Add(Sex, arg)
 	return u
 }
 
