@@ -156,8 +156,13 @@ func (s *UserServiceImpl) ListUsers(ctx context.Context, req *api.ListUsersReq) 
 		offset = 0
 	}
 	if len(req.GetFields()) == 0 {
-		return nil, status.Error(codes.InvalidArgument, "empty select field")
+		for field := range api.UserField_name {
+			if field > 0 {
+				req.Fields = append(req.Fields, api.UserField(field))
+			}
+		}
 	}
+
 	selectFields := make([]string, 0, len(req.GetFields()))
 	for _, v := range req.GetFields() {
 		selectFields = append(selectFields, strings.TrimPrefix(v.String(), "User_"))
@@ -204,7 +209,7 @@ func (s *UserServiceImpl) ListUsers(ctx context.Context, req *api.ListUsersReq) 
 	}
 	pageCount := int32(math.Ceil(float64(count) / float64(size)))
 
-	return &api.ListUsersResp{Users: convertUserList(list), TotalCount: int32(count), PageCount: pageCount}, nil
+	return &api.ListUsersResp{Users: convertUserList(list), TotalCount: int32(count), PageCount: pageCount, PageSize: size, Page: page}, nil
 }
 
 func convertUser(a *user.User) *api.User {

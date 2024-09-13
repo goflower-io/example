@@ -12,12 +12,12 @@ service UserService {
 }
 
 message User {
-    //id
-    int64	id = 1 ; // @gotags: validate:"required"
+    //id"
+    int64	id = 1 ;
     //名称
     string	name = 2 ; // @gotags: validate:"max=100,min=10"
     //年龄
-    int64	age = 3 ;
+    int64	age = 3 ; // @gotags: validate:"max=140,min=18"
     //性别
     int64	sex = 4 ; // @gotags: validate:"oneof=0 1 2"
     //创建时间
@@ -65,4 +65,6 @@ message ListUsersResp{
     repeated User users = 1 ; 
     int32 total_count = 2 ;   
     int32 page_count = 3 ; 
-  }
+    int32 page_size = 4;
+    int32 page = 5;
+}

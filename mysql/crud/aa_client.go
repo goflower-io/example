@@ -14,6 +14,7 @@ type Client struct {
 	config *xsql.Config
 	db     *xsql.DB
 	Master *ClientM
+	debug  bool
 	User   *UserClient
 }
 
@@ -22,9 +23,17 @@ type ClientM struct {
 }
 
 func (c *Client) init() {
-	c.User = &UserClient{eq: c.db, config: c.config}
+	var eqx xsql.ExecQuerier
+	var eqxm xsql.ExecQuerier
+	eqx = c.db
+	eqxm = c.db.Master()
+	if c.debug {
+		eqx = xsql.Debug(c.db)
+		eqxm = xsql.Debug(c.db.Master())
+	}
+	c.User = &UserClient{eq: eqx, config: c.config}
 	c.Master = &ClientM{
-		User: &UserClient{eq: c.db.Master(), config: c.config},
+		User: &UserClient{eq: eqxm, config: c.config},
 	}
 }
 
@@ -38,18 +47,18 @@ func (tx *Tx) init() {
 	tx.User = &UserClient{eq: tx.tx, config: tx.config}
 }
 
-func NewClient(config *xsql.Config) (*Client, error) {
+func NewClient(config *xsql.Config, debug bool) (*Client, error) {
 	db, err := mysql.NewDB(config)
 	if err != nil {
 		return nil, err
 	}
-	c := &Client{config: config, db: db}
+	c := &Client{config: config, db: db, debug: debug}
 	c.init()
 	return c, nil
 }
 
-func NewClientWithDB(db *xsql.DB) *Client {
-	c := &Client{config: db.Config(), db: db}
+func NewClientWithDB(db *xsql.DB, debug bool) *Client {
+	c := &Client{config: db.Config(), db: db, debug: debug}
 	c.init()
 	return c
 }

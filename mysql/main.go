@@ -29,7 +29,7 @@ func main() {
 		IdleTimeout:  time.Hour * 24,
 		QueryTimeout: time.Second * 10,
 		ExecTimeout:  time.Second * 10,
-	})
+	}, true)
 	if err != nil {
 		panic(err)
 	}
