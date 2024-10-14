@@ -1,0 +1,67 @@
+syntax="proto3";
+option go_package = "/api";
+
+import "google/protobuf/empty.proto";
+
+service UserService { 
+    rpc CreateUser(User)returns(User);
+    rpc DeleteUser(UserId)returns(google.protobuf.Empty);
+    rpc UpdateUser(UpdateUserReq)returns(User);
+    rpc GetUser(UserId)returns(User);
+    rpc ListUsers(ListUsersReq)returns(ListUsersResp);
+}
+
+message User {
+    //
+    int64	id = 1 ;
+    //
+    string	name = 2 ;
+    //
+    int64	age = 3 ;
+    //
+    int64	ctime = 4 ;
+    //
+    int64	mtime = 5 ;  
+}
+
+enum UserField{
+    User_unknow = 0;
+    User_id = 1;
+    User_name = 2;
+    User_age = 3;
+    User_ctime = 4;
+    User_mtime = 5;   
+}
+
+message UserId{
+    int64 id = 1 ; 
+}
+
+message UpdateUserReq{
+    User user = 1 ;
+    repeated UserField masks  = 2 ;
+}
+
+
+message ListUsersReq{
+    int32 page = 1 ;
+    int32 page_size = 2 ;
+    UserField orderby = 3 ; 
+    bool desc = 4; 
+    repeated UserFilter filters = 5 ; 
+    repeated UserField fields = 6; 
+}
+
+message UserFilter{
+     UserField field = 1;
+    string op = 2;
+    string val = 3;
+}
+
+message ListUsersResp{
+    repeated User users = 1 ; 
+    int32 total_count = 2 ;   
+    int32 page_count = 3 ; 
+    int32 page_size = 4;
+    int32 page = 5;
+}

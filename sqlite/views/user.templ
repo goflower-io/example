@@ -1,0 +1,208 @@
+
+package views
+
+import "fmt"
+import 	"github.com/happycrud/example/sqlite/api"
+import "github.com/happycrud/golib/net/http/ui"
+import "github.com/happycrud/golib/net/http"
+import "net/url"
+
+
+
+
+
+
+templ UserShell() {
+ @Index(){
+<div>
+			{ children... }
+	</div>
+ }
+}
+
+templ UserListPage(resp *api.ListUsersResp,path string, form url.Values) {
+	@UserShell() {
+		@UserListView(resp,path,form)
+	}
+}
+
+templ UserListView(resp *api.ListUsersResp,path string,form url.Values) {
+	@ui.PaginationView(
+		"User", path, form, http.CaculatePaginator(resp.GetPage(), resp.GetPageSize(), resp.GetTotalCount())) {
+  <table>
+    <tr>
+  <th>Id</th>
+  <th>Name</th>
+  <th>Age</th>
+  <th>Ctime</th>
+  <th>Mtime</th>
+    </tr>
+		for idx,a :=range resp.GetUsers() {
+			@UserItemView(idx, a)
+		}
+  </table>
+  }
+}
+
+templ UserItemView(idx int, a *api.User) {
+	<tr id={ fmt.Sprintf("UserItem_%d", idx) }>
+     <td>{fmt.Sprintf("%v",a.Id)}</td>
+     <td>{fmt.Sprintf("%v",a.Name)}</td>
+     <td>{fmt.Sprintf("%v",a.Age)}</td>
+     <td>{fmt.Sprintf("%v",a.Ctime)}</td>
+     <td>{fmt.Sprintf("%v",a.Mtime)}</td>
+	</tr>
+}
+
+templ UserDetailPage(a *api.User) {
+	@UserShell() {
+		@UserDetailView(a)
+	}
+}
+
+templ UserDetailView(a *api.User) {
+  <div>
+  <lable for="Id">Id:</lable>
+  <div>{fmt.Sprintf("%v", a.Id) }</div>
+  </div>
+  <div>
+  <lable for="Name">Name:</lable>
+  <div>{fmt.Sprintf("%v", a.Name) }</div>
+  </div>
+  <div>
+  <lable for="Age">Age:</lable>
+  <div>{fmt.Sprintf("%v", a.Age) }</div>
+  </div>
+  <div>
+  <lable for="Ctime">Ctime:</lable>
+  <div>{fmt.Sprintf("%v", a.Ctime) }</div>
+  </div>
+  <div>
+  <lable for="Mtime">Mtime:</lable>
+  <div>{fmt.Sprintf("%v", a.Mtime) }</div>
+  </div>
+}
+
+templ UserCreatePage() {
+	@UserShell() {
+		@UserCreateView()
+	}
+}
+
+templ UserCreateView() {
+	<form
+		hx-boost="true"
+		hx-put="/UserService/CreateUser"
+    hx-target="this"
+		hx-swap="outerHTML"
+	>
+  <div>
+  <lable for="Id">Id</lable>
+		<input type="" id="Id" name="Id" disabled/>
+</div> 
+    <div>
+			<lable for="Name">Name:</lable>
+      <input
+				type=""
+				id="Name"
+				name="Name"
+			/>
+		</div> 
+    <div>
+			<lable for="Age">Age:</lable>
+      <input
+				type=""
+				id="Age"
+				name="Age"
+			/>
+		</div> 
+    <div>
+			<lable for="Ctime">Ctime:</lable>
+      <input
+				type=""
+				id="Ctime"
+				name="Ctime"
+			/>
+		</div> 
+    <div>
+			<lable for="Mtime">Mtime:</lable>
+      <input
+				type=""
+				id="Mtime"
+				name="Mtime"
+			/>
+		</div>
+		<input type="submit" value="submit"/>
+	</form>
+}
+
+templ UserUpdatePage(a *api.User) {
+	@UserShell() {
+		@UserUpdateView(a)
+	}
+}
+
+templ UserUpdateView(a *api.User) {
+	<form
+		hx-boost="true"
+		hx-post={ "/UserService/UpdateUser?User.Id=" + fmt.Sprintf("%d",a.Id) }
+    hx-target="this"
+		hx-swap="outerHTML"
+	>
+		<div>
+			<lable for="User.Id">Id:</lable>
+			<input
+				disabled
+				type=""
+				id="User.Id"
+				name="User.Id"
+				value={ fmt.Sprintf("%d",a.Id) }
+			/>
+		</div> 
+    <div>
+			<lable for="User.Name">Name:</lable>
+      <input
+				type=""
+				id="User.Name"
+				name="User.Name"
+				value={ fmt.Sprintf("%v",a.Name) }
+				hx-on:change="document.getElementById('User.Name.Mask').checked = true;"
+			/>
+		</div> 
+    <div>
+			<lable for="User.Age">Age:</lable>
+      <input
+				type=""
+				id="User.Age"
+				name="User.Age"
+				value={ fmt.Sprintf("%v",a.Age) }
+				hx-on:change="document.getElementById('User.Age.Mask').checked = true;"
+			/>
+		</div> 
+    <div>
+			<lable for="User.Ctime">Ctime:</lable>
+      <input
+				type=""
+				id="User.Ctime"
+				name="User.Ctime"
+				value={ fmt.Sprintf("%v",a.Ctime) }
+				hx-on:change="document.getElementById('User.Ctime.Mask').checked = true;"
+			/>
+		</div> 
+    <div>
+			<lable for="User.Mtime">Mtime:</lable>
+      <input
+				type=""
+				id="User.Mtime"
+				name="User.Mtime"
+				value={ fmt.Sprintf("%v",a.Mtime) }
+				hx-on:change="document.getElementById('User.Mtime.Mask').checked = true;"
+			/>
+		</div>
+		<input type="submit" value="submit"/> 
+		<input type="checkbox" value="2" hidden id="User.Name.Mask" name="Masks"/> 
+		<input type="checkbox" value="3" hidden id="User.Age.Mask" name="Masks"/> 
+		<input type="checkbox" value="4" hidden id="User.Ctime.Mask" name="Masks"/> 
+		<input type="checkbox" value="5" hidden id="User.Mtime.Mask" name="Masks"/>
+	</form>
+}
