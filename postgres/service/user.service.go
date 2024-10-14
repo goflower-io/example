@@ -34,9 +34,10 @@ func (s *UserServiceImpl) CreateUser(ctx context.Context, req *api.User) (*api.U
 	}
 
 	a := &user.User{
-		Id:   0,
-		Name: req.GetName(),
-		Age:  req.GetAge(),
+		Id:      0,
+		Name:    req.GetName(),
+		Age:     req.GetAge(),
+		Address: req.GetAddress(),
 	}
 	var err error
 	if a.Ctime, err = time.ParseInLocation("2006-01-02 15:04:05", req.GetCtime(), time.Local); err != nil {
@@ -86,16 +87,18 @@ func (s *UserServiceImpl) UpdateUser(ctx context.Context, req *api.UpdateUserReq
 			return nil, err
 		}
 	}
-	if len(req.GetUpdateMask()) == 0 {
+	if len(req.GetMasks()) == 0 {
 		return nil, status.Error(codes.InvalidArgument, "empty filter condition")
 	}
 	update := s.Client.User.Update()
-	for _, v := range req.GetUpdateMask() {
+	for _, v := range req.GetMasks() {
 		switch v {
 		case api.UserField_User_name:
 			update.SetName(req.GetUser().GetName())
 		case api.UserField_User_age:
 			update.SetAge(req.GetUser().GetAge())
+		case api.UserField_User_address:
+			update.SetAddress(req.GetUser().GetAddress())
 		case api.UserField_User_ctime:
 			t, err := time.ParseInLocation("2006-01-02 15:04:05", req.GetUser().GetCtime(), time.Local)
 			if err != nil {
@@ -156,11 +159,16 @@ func (s *UserServiceImpl) ListUsers(ctx context.Context, req *api.ListUsersReq) 
 	if offset < 0 {
 		offset = 0
 	}
-	if len(req.GetSelectFields()) == 0 {
-		return nil, status.Error(codes.InvalidArgument, "empty select field")
+	if len(req.GetFields()) == 0 {
+		for field := range api.UserField_name {
+			if field > 0 {
+				req.Fields = append(req.Fields, api.UserField(field))
+			}
+		}
 	}
-	selectFields := make([]string, 0, len(req.GetSelectFields()))
-	for _, v := range req.GetSelectFields() {
+
+	selectFields := make([]string, 0, len(req.GetFields()))
+	for _, v := range req.GetFields() {
 		selectFields = append(selectFields, strings.TrimPrefix(v.String(), "User_"))
 	}
 	finder := s.Client.User.
@@ -169,11 +177,11 @@ func (s *UserServiceImpl) ListUsers(ctx context.Context, req *api.ListUsersReq) 
 		Offset(offset).
 		Limit(size)
 
-	if req.GetOrderByField() == api.UserField_User_unknow {
-		req.OrderByField = api.UserField_User_id
+	if req.GetOrderby() == api.UserField_User_unknow {
+		req.Orderby = api.UserField_User_id
 	}
-	odb := strings.TrimPrefix(req.GetOrderByField().String(), "User_")
-	if req.GetOrderByDesc() {
+	odb := strings.TrimPrefix(req.GetOrderby().String(), "User_")
+	if req.GetDesc() {
 		finder.OrderDesc(odb)
 	} else {
 		finder.OrderAsc(odb)
@@ -184,7 +192,7 @@ func (s *UserServiceImpl) ListUsers(ctx context.Context, req *api.ListUsersReq) 
 
 	var ps []*xsql.Predicate
 	for _, v := range req.GetFilters() {
-		p, err := xsql.GenP(strings.TrimPrefix(v.Field.String(), "User_"), v.Op, v.Value)
+		p, err := xsql.GenP(strings.TrimPrefix(v.Field.String(), "User_"), v.Op, v.Val)
 		if err != nil {
 			return nil, err
 		}
@@ -205,16 +213,17 @@ func (s *UserServiceImpl) ListUsers(ctx context.Context, req *api.ListUsersReq) 
 	}
 	pageCount := int32(math.Ceil(float64(count) / float64(size)))
 
-	return &api.ListUsersResp{Users: convertUserList(list), TotalCount: int32(count), PageCount: pageCount}, nil
+	return &api.ListUsersResp{Users: convertUserList(list), TotalCount: int32(count), PageCount: pageCount, PageSize: size, Page: page}, nil
 }
 
 func convertUser(a *user.User) *api.User {
 	return &api.User{
-		Id:    a.Id,
-		Name:  a.Name,
-		Age:   a.Age,
-		Ctime: a.Ctime.Format("2006-01-02 15:04:05"),
-		Mtime: a.Mtime.Format("2006-01-02 15:04:05"),
+		Id:      a.Id,
+		Name:    a.Name,
+		Age:     a.Age,
+		Address: a.Address,
+		Ctime:   a.Ctime.Format("2006-01-02 15:04:05"),
+		Mtime:   a.Mtime.Format("2006-01-02 15:04:05"),
 	}
 }
 

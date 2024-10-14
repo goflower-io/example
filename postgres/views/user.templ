@@ -2,34 +2,58 @@
 package views
 
 import "fmt"
-import "github.com/happycrud/example/postgres/api"
+import 	"github.com/happycrud/example/postgres/api"
+import "github.com/happycrud/golib/net/http/ui"
+import "github.com/happycrud/golib/net/http"
+import "net/url"
+
+
+
+
+
 
 templ UserShell() {
-	@Index() {
-		<div>
+ @Index(){
+<div>
 			{ children... }
-		</div>
-	}
+	</div>
+ }
 }
 
-templ UserListPage(resp *api.ListUsersResp) {
+templ UserListPage(resp *api.ListUsersResp,path string, form url.Values) {
 	@UserShell() {
-		@UserListView(resp)
+		@UserListView(resp,path,form)
 	}
 }
 
-templ UserListView(resp *api.ListUsersResp) {
-	<div id="UserListView">
+templ UserListView(resp *api.ListUsersResp,path string,form url.Values) {
+	@ui.PaginationView(
+		"User", path, form, http.CaculatePaginator(resp.GetPage(), resp.GetPageSize(), resp.GetTotalCount())) {
+  <table>
+    <tr>
+  <th>Id</th>
+  <th>Name</th>
+  <th>Age</th>
+  <th>Address</th>
+  <th>Ctime</th>
+  <th>Mtime</th>
+    </tr>
 		for idx,a :=range resp.GetUsers() {
 			@UserItemView(idx, a)
 		}
-	</div>
+  </table>
+  }
 }
 
 templ UserItemView(idx int, a *api.User) {
-	<div id={ fmt.Sprintf("UserItem_%d", idx) }>
-		// todo
-	</div>
+	<tr id={ fmt.Sprintf("UserItem_%d", idx) }>
+     <td>{fmt.Sprintf("%v",a.Id)}</td>
+     <td>{fmt.Sprintf("%v",a.Name)}</td>
+     <td>{fmt.Sprintf("%v",a.Age)}</td>
+     <td>{fmt.Sprintf("%v",a.Address)}</td>
+     <td>{fmt.Sprintf("%v",a.Ctime)}</td>
+     <td>{fmt.Sprintf("%v",a.Mtime)}</td>
+	</tr>
 }
 
 templ UserDetailPage(a *api.User) {
@@ -39,7 +63,30 @@ templ UserDetailPage(a *api.User) {
 }
 
 templ UserDetailView(a *api.User) {
-	<div></div>
+  <div>
+  <lable for="Id">Id:</lable>
+  <div>{fmt.Sprintf("%v", a.Id) }</div>
+  </div>
+  <div>
+  <lable for="Name">Name:</lable>
+  <div>{fmt.Sprintf("%v", a.Name) }</div>
+  </div>
+  <div>
+  <lable for="Age">Age:</lable>
+  <div>{fmt.Sprintf("%v", a.Age) }</div>
+  </div>
+  <div>
+  <lable for="Address">Address:</lable>
+  <div>{fmt.Sprintf("%v", a.Address) }</div>
+  </div>
+  <div>
+  <lable for="Ctime">Ctime:</lable>
+  <div>{fmt.Sprintf("%v", a.Ctime) }</div>
+  </div>
+  <div>
+  <lable for="Mtime">Mtime:</lable>
+  <div>{fmt.Sprintf("%v", a.Mtime) }</div>
+  </div>
 }
 
 templ UserCreatePage() {
@@ -52,32 +99,62 @@ templ UserCreateView() {
 	<form
 		hx-boost="true"
 		hx-put="/UserService/CreateUser"
-		hx-target="this"
+    hx-target="this"
 		hx-swap="outerHTML"
 	>
-		<input type="text" id="User.Id" name="User.Id" disabled/>
-		<input
-			type="text"
-			name="User.Name"
-		/>
-		<input
-			type="text"
-			name="User.Age"
-		/>
-		<input
-			type="text"
-			name="User.Ctime"
-		/>
-		<input
-			type="text"
-			name="User.Mtime"
-		/>
+  <div>
+  <lable for="Id">Id</lable>
+		<input type="" id="Id" name="Id" disabled/>
+</div> 
+    <div>
+			<lable for="Name">Name:</lable>
+      <input
+				type="text"
+				id="Name"
+				name="Name"
+			/>
+		</div> 
+    <div>
+			<lable for="Age">Age:</lable>
+      <select 	
+        id="Age"
+				name="Age"
+      >
+            <option value="1">x</option>
+            <option value="2">y</option>
+            <option value="3">z</option>
+      </select>
+		</div> 
+    <div>
+			<lable for="Address">Address:</lable>
+      <input
+				type=""
+				id="Address"
+				name="Address"
+			/>
+		</div> 
+    <div>
+			<lable for="Ctime">Ctime:</lable>
+      <input
+				type=""
+				id="Ctime"
+				name="Ctime"
+			/>
+		</div> 
+    <div>
+			<lable for="Mtime">Mtime:</lable>
+      <input
+				type=""
+				id="Mtime"
+				name="Mtime"
+			/>
+		</div>
 		<input type="submit" value="submit"/>
 	</form>
 }
 
 templ UserUpdatePage(a *api.User) {
-	@Index() {
+	@UserShell() {
 		@UserUpdateView(a)
 	}
 }
@@ -85,64 +162,90 @@ templ UserUpdatePage(a *api.User) {
 templ UserUpdateView(a *api.User) {
 	<form
 		hx-boost="true"
-		hx-post={ "/UserService/UpdateUser?User.Id=" + fmt.Sprintf("%d", a.Id) }
-		hx-target="this"
+		hx-post={ "/UserService/UpdateUser?User.Id=" + fmt.Sprintf("%d",a.Id) }
+    hx-target="this"
 		hx-swap="outerHTML"
 	>
 		<div>
 			<lable for="User.Id">Id:</lable>
 			<input
 				disabled
-				type="text"
+				type=""
 				id="User.Id"
 				name="User.Id"
-				value={ fmt.Sprintf("%d", a.Id) }
+				value={ fmt.Sprintf("%d",a.Id) }
 			/>
-		</div>
-		<div>
+		</div> 
+    <div>
 			<lable for="User.Name">Name:</lable>
-			<input
+      <input
 				type="text"
 				id="User.Name"
 				name="User.Name"
-				value={ fmt.Sprintf("%v", a.Name) }
-				hx-on:change="document.getElementById('User.Name.Mask').value = '2';"
+				value={ fmt.Sprintf("%v",a.Name) }
+				hx-on:change="document.getElementById('User.Name.Mask').checked = true;"
 			/>
-		</div>
-		<div>
+		</div> 
+    <div>
 			<lable for="User.Age">Age:</lable>
-			<input
-				type="text"
-				id="User.Age"
+      <select 	
+        id="User.Age"
 				name="User.Age"
-				value={ fmt.Sprintf("%v", a.Name) }
-				hx-on:change="document.getElementById('User.Age.Mask').value = '3';"
+				value={ fmt.Sprintf("%v",a.Age) }
+				hx-on:change="document.getElementById('User.Age.Mask').checked = true;"
+      >
+         if a.Age == 1{
+            <option value="1" selected>x</option>
+         }else{
+            <option value="1">x</option>
+         }
+         if a.Age == 2{
+            <option value="2" selected>y</option>
+         }else{
+            <option value="2">y</option>
+         }
+         if a.Age == 3{
+            <option value="3" selected>z</option>
+         }else{
+            <option value="3">z</option>
+         }
+      </select>
+		</div> 
+    <div>
+			<lable for="User.Address">Address:</lable>
+      <input
+				type=""
+				id="User.Address"
+				name="User.Address"
+				value={ fmt.Sprintf("%v",a.Address) }
+				hx-on:change="document.getElementById('User.Address.Mask').checked = true;"
 			/>
-		</div>
-		<div>
+		</div> 
+    <div>
 			<lable for="User.Ctime">Ctime:</lable>
-			<input
-				type="text"
+      <input
+				type=""
 				id="User.Ctime"
 				name="User.Ctime"
-				value={ fmt.Sprintf("%v", a.Name) }
-				hx-on:change="document.getElementById('User.Ctime.Mask').value = '4';"
+				value={ fmt.Sprintf("%v",a.Ctime) }
+				hx-on:change="document.getElementById('User.Ctime.Mask').checked = true;"
 			/>
-		</div>
-		<div>
+		</div> 
+    <div>
 			<lable for="User.Mtime">Mtime:</lable>
-			<input
-				type="text"
+      <input
+				type=""
 				id="User.Mtime"
 				name="User.Mtime"
-				value={ fmt.Sprintf("%v", a.Name) }
-				hx-on:change="document.getElementById('User.Mtime.Mask').value = '5';"
+				value={ fmt.Sprintf("%v",a.Mtime) }
+				hx-on:change="document.getElementById('User.Mtime.Mask').checked = true;"
 			/>
 		</div>
-		<input type="submit" value="submit"/>
-		<input hidden id="User.Name.Mask" name="UpdateMask"/>
-		<input hidden id="User.Age.Mask" name="UpdateMask"/>
-		<input hidden id="User.Ctime.Mask" name="UpdateMask"/>
-		<input hidden id="User.Mtime.Mask" name="UpdateMask"/>
+		<input type="submit" value="submit"/> 
+		<input type="checkbox" value="2" hidden id="User.Name.Mask" name="Masks"/> 
+		<input type="checkbox" value="3" hidden id="User.Age.Mask" name="Masks"/> 
+		<input type="checkbox" value="4" hidden id="User.Address.Mask" name="Masks"/> 
+		<input type="checkbox" value="5" hidden id="User.Ctime.Mask" name="Masks"/> 
+		<input type="checkbox" value="6" hidden id="User.Mtime.Mask" name="Masks"/>
 	</form>
 }

@@ -59,9 +59,9 @@ func (h *UserHandler) ListUsersHandle(w http.ResponseWriter, req *http.Request) 
 		d, _ := json.Marshal(resp)
 		w.Write(d)
 	case h1.ResponseHTMX:
-		views.UserListView(resp).Render(req.Context(), w)
+		views.UserListView(resp, req.URL.Path, req.Form).Render(req.Context(), w)
 	case h1.ResponseHTML:
-		views.UserListPage(resp).Render(req.Context(), w)
+		views.UserListPage(resp, req.URL.Path, req.Form).Render(req.Context(), w)
 	}
 }
 
@@ -140,7 +140,7 @@ func (h *UserHandler) CreateUserHandle(w http.ResponseWriter, req *http.Request)
 		case h1.ResponseHTMX:
 			views.UserCreateView().Render(req.Context(), w)
 		default:
-			views.UserCreateView().Render(req.Context(), w)
+			views.UserCreatePage().Render(req.Context(), w)
 		}
 		return
 	}

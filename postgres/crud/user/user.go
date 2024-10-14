@@ -10,25 +10,28 @@ import (
 )
 
 type User struct {
-	Id    int64     `json:"id"`    //
-	Name  string    `json:"name"`  //
-	Age   []int32   `json:"age"`   //
-	Ctime time.Time `json:"ctime"` //
-	Mtime time.Time `json:"mtime"` //
+	Id      int64     `json:"id"`      // Id
+	Name    string    `json:"name"`    // 姓名
+	Age     int64     `json:"age"`     // 年龄
+	Address []string  `json:"address"` // 地址
+	Ctime   time.Time `json:"ctime"`   // 创建时间
+	Mtime   time.Time `json:"mtime"`   // 修改时间
 }
 
 const (
 	// table tableName is user
 	table = "user"
-	//Id
+	//Id Id
 	Id = "id"
-	//Name
+	//Name 姓名
 	Name = "name"
-	//Age
+	//Age 年龄
 	Age = "age"
-	//Ctime
+	//Address 地址
+	Address = "address"
+	//Ctime 创建时间
 	Ctime = "ctime"
-	//Mtime
+	//Mtime 修改时间
 	Mtime = "mtime"
 )
 
@@ -36,16 +39,18 @@ var columns = []string{
 	Id,
 	Name,
 	Age,
+	Address,
 	Ctime,
 	Mtime,
 }
 
 var columnsSet = map[string]struct{}{
-	Id:    {},
-	Name:  {},
-	Age:   {},
-	Ctime: {},
-	Mtime: {},
+	Id:      {},
+	Name:    {},
+	Age:     {},
+	Address: {},
+	Ctime:   {},
+	Mtime:   {},
 }
 
 func Columns() []string {
@@ -72,7 +77,9 @@ func (u *User) ScanDst(aa any, columns []string) []any {
 			case Name:
 				dst = append(dst, &a.Name)
 			case Age:
-				dst = append(dst, xsql.PgxMap().SQLScanner(&a.Age))
+				dst = append(dst, &a.Age)
+			case Address:
+				dst = append(dst, xsql.PgxMap().SQLScanner(&a.Address))
 			case Ctime:
 				dst = append(dst, &a.Ctime)
 			case Mtime:
@@ -89,7 +96,7 @@ func (a *User) Values() []any {
 	if a.IsNil() {
 		return []any{}
 	}
-	return []interface{}{a.Id, a.Name, a.Age, a.Ctime, a.Mtime}
+	return []interface{}{a.Id, a.Name, a.Age, a.Address, a.Ctime, a.Mtime}
 }
 func (a *User) GetAutoIncrPk() (int64, string) {
 
@@ -130,6 +137,8 @@ const (
 	IdOp = xsql.FieldOp[int64](Id)
 
 	NameOp = xsql.StrFieldOp(Name)
+
+	AgeOp = xsql.FieldOp[int64](Age)
 
 	CtimeOp = xsql.FieldOp[string](Ctime)
 
@@ -183,8 +192,18 @@ func (u *Updater) SetName(arg string) *Updater {
 	return u
 }
 
-func (u *Updater) SetAge(arg []int32) *Updater {
+func (u *Updater) SetAge(arg int64) *Updater {
 	u.Set(Age, arg)
+	return u
+}
+
+func (u *Updater) AddAge(arg interface{}) *Updater {
+	u.Add(Age, arg)
+	return u
+}
+
+func (u *Updater) SetAddress(arg []string) *Updater {
+	u.Set(Address, arg)
 	return u
 }
 
