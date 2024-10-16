@@ -13,11 +13,11 @@ service UserService {
 
 message User {
     //
-    int64	id = 1 ;
+    int64	id = 1 ; // @gotags: validate:"oneof 1 2 3"
     //
-    string	name = 2 ;
+    string	name = 2 ; // @gotags: validate:"max=100,min=10"
     //
-    int64	age = 3 ;
+    int64	age = 3 ; // @gotags: validate:"max=140,min=18"
     //
     int64	ctime = 4 ;
     //

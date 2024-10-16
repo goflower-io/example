@@ -12,17 +12,17 @@ service UserService {
 }
 
 message User {
-    //Id
-    int64	id = 1 ;
-    //姓名
-    string	name = 2 ; // @gotags: validate:"max=20"
-    //年龄
-    int64	age = 3 ; // @gotags: validate:"oneof 1 2 3"
-    //地址
+    //
+    int64	id = 1 ; // @gotags: validate:"oneof 1 2 3"
+    //
+    string	name = 2 ; // @gotags: validate:"max=100,min=10"
+    //
+    int64	age = 3 ; // @gotags: validate:"max=140,min=18"
+    //
    repeated   string	address = 4 ;
-    //创建时间
+    //
     string	ctime = 5 ;
-    //修改时间
+    //
     string	mtime = 6 ;  
 }
 

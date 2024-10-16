@@ -84,9 +84,9 @@ type User struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Id int64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	Name string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
-	Age int64 `protobuf:"varint,3,opt,name=age,proto3" json:"age,omitempty"`
+	Id int64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty" validate:"oneof 1 2 3"` // @gotags: validate:"oneof 1 2 3"
+	Name string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty" validate:"max=100,min=10"` // @gotags: validate:"max=100,min=10"
+	Age int64 `protobuf:"varint,3,opt,name=age,proto3" json:"age,omitempty" validate:"max=140,min=18"` // @gotags: validate:"max=140,min=18"
 	Ctime int64 `protobuf:"varint,4,opt,name=ctime,proto3" json:"ctime,omitempty"`
 	Mtime int64 `protobuf:"varint,5,opt,name=mtime,proto3" json:"mtime,omitempty"`
 }

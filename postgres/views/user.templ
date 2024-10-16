@@ -104,7 +104,7 @@ templ UserCreateView() {
 	>
   <div>
   <lable for="Id">Id</lable>
-		<input type="" id="Id" name="Id" disabled/>
+		<input type="text" id="Id" name="Id" disabled/>
 </div> 
     <div>
 			<lable for="Name">Name:</lable>
@@ -116,19 +116,16 @@ templ UserCreateView() {
 		</div> 
     <div>
 			<lable for="Age">Age:</lable>
-      <select 	
-        id="Age"
+      <input
+				type="number"
+				id="Age"
 				name="Age"
-      >
-            <option value="1">x</option>
-            <option value="2">y</option>
-            <option value="3">z</option>
-      </select>
+			/>
 		</div> 
     <div>
 			<lable for="Address">Address:</lable>
       <input
-				type=""
+				type="text"
 				id="Address"
 				name="Address"
 			/>
@@ -170,7 +167,7 @@ templ UserUpdateView(a *api.User) {
 			<lable for="User.Id">Id:</lable>
 			<input
 				disabled
-				type=""
+				type="text"
 				id="User.Id"
 				name="User.Id"
 				value={ fmt.Sprintf("%d",a.Id) }
@@ -188,33 +185,18 @@ templ UserUpdateView(a *api.User) {
 		</div> 
     <div>
 			<lable for="User.Age">Age:</lable>
-      <select 	
-        id="User.Age"
+      <input
+				type="number"
+				id="User.Age"
 				name="User.Age"
 				value={ fmt.Sprintf("%v",a.Age) }
 				hx-on:change="document.getElementById('User.Age.Mask').checked = true;"
-      >
-         if a.Age == 1{
-            <option value="1" selected>x</option>
-         }else{
-            <option value="1">x</option>
-         }
-         if a.Age == 2{
-            <option value="2" selected>y</option>
-         }else{
-            <option value="2">y</option>
-         }
-         if a.Age == 3{
-            <option value="3" selected>z</option>
-         }else{
-            <option value="3">z</option>
-         }
-      </select>
+			/>
 		</div> 
     <div>
 			<lable for="User.Address">Address:</lable>
       <input
-				type=""
+				type="text"
 				id="User.Address"
 				name="User.Address"
 				value={ fmt.Sprintf("%v",a.Address) }

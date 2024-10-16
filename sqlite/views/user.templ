@@ -98,12 +98,12 @@ templ UserCreateView() {
 	>
   <div>
   <lable for="Id">Id</lable>
-		<input type="" id="Id" name="Id" disabled/>
+		<input type="text" id="Id" name="Id" disabled/>
 </div> 
     <div>
 			<lable for="Name">Name:</lable>
       <input
-				type=""
+				type="text"
 				id="Name"
 				name="Name"
 			/>
@@ -111,7 +111,7 @@ templ UserCreateView() {
     <div>
 			<lable for="Age">Age:</lable>
       <input
-				type=""
+				type="number"
 				id="Age"
 				name="Age"
 			/>
@@ -153,7 +153,7 @@ templ UserUpdateView(a *api.User) {
 			<lable for="User.Id">Id:</lable>
 			<input
 				disabled
-				type=""
+				type="text"
 				id="User.Id"
 				name="User.Id"
 				value={ fmt.Sprintf("%d",a.Id) }
@@ -162,7 +162,7 @@ templ UserUpdateView(a *api.User) {
     <div>
 			<lable for="User.Name">Name:</lable>
       <input
-				type=""
+				type="text"
 				id="User.Name"
 				name="User.Name"
 				value={ fmt.Sprintf("%v",a.Name) }
@@ -172,7 +172,7 @@ templ UserUpdateView(a *api.User) {
     <div>
 			<lable for="User.Age">Age:</lable>
       <input
-				type=""
+				type="number"
 				id="User.Age"
 				name="User.Age"
 				value={ fmt.Sprintf("%v",a.Age) }

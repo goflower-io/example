@@ -87,17 +87,11 @@ type User struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	// Id
-	Id int64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	// 姓名
-	Name string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty" validate:"max=20"` // @gotags: validate:"max=20"
-	// 年龄
-	Age int64 `protobuf:"varint,3,opt,name=age,proto3" json:"age,omitempty" validate:"oneof 1 2 3"` // @gotags: validate:"oneof 1 2 3"
-	// 地址
+	Id int64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty" validate:"oneof 1 2 3"` // @gotags: validate:"oneof 1 2 3"
+	Name string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty" validate:"max=100,min=10"` // @gotags: validate:"max=100,min=10"
+	Age int64 `protobuf:"varint,3,opt,name=age,proto3" json:"age,omitempty" validate:"max=140,min=18"` // @gotags: validate:"max=140,min=18"
 	Address []string `protobuf:"bytes,4,rep,name=address,proto3" json:"address,omitempty"`
-	// 创建时间
 	Ctime string `protobuf:"bytes,5,opt,name=ctime,proto3" json:"ctime,omitempty"`
-	// 修改时间
 	Mtime string `protobuf:"bytes,6,opt,name=mtime,proto3" json:"mtime,omitempty"`
 }
 

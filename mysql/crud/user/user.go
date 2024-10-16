@@ -11,9 +11,9 @@ import (
 
 type User struct {
 	Id    int64     `json:"id"`    // id"
-	Name  string    `json:"name"`  // 名称
-	Age   int64     `json:"age"`   // 年龄
-	Sex   int64     `json:"sex"`   // 性别
+	Name  string    `json:"name"`  // 名称|text|validate:"max=100,min=10"
+	Age   int64     `json:"age"`   // 年龄|number|validate:"max=140,min=18"
+	Sex   int64     `json:"sex"`   // 性别|select|validate:"oneof=0 1 2"|0:女 1:男 2:无
 	Ctime time.Time `json:"ctime"` // 创建时间
 	Mtime time.Time `json:"mtime"` // 更新时间
 }
@@ -23,11 +23,11 @@ const (
 	table = "user"
 	//Id id"
 	Id = "id"
-	//Name 名称
+	//Name 名称|text|validate:"max=100,min=10"
 	Name = "name"
-	//Age 年龄
+	//Age 年龄|number|validate:"max=140,min=18"
 	Age = "age"
-	//Sex 性别
+	//Sex 性别|select|validate:"oneof=0 1 2"|0:女 1:男 2:无
 	Sex = "sex"
 	//Ctime 创建时间
 	Ctime = "ctime"

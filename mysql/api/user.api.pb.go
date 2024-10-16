@@ -88,12 +88,12 @@ type User struct {
 	unknownFields protoimpl.UnknownFields
 
 	// id"
-	Id int64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	// 名称
+	Id int64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty" validate:"oneof 1 2 3"` // @gotags: validate:"oneof 1 2 3"
+	// 名称|text|validate:"max=100,min=10"
 	Name string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty" validate:"max=100,min=10"` // @gotags: validate:"max=100,min=10"
-	// 年龄
+	// 年龄|number|validate:"max=140,min=18"
 	Age int64 `protobuf:"varint,3,opt,name=age,proto3" json:"age,omitempty" validate:"max=140,min=18"` // @gotags: validate:"max=140,min=18"
-	// 性别
+	// 性别|select|validate:"oneof=0 1 2"|0:女 1:男 2:无
 	Sex int64 `protobuf:"varint,4,opt,name=sex,proto3" json:"sex,omitempty" validate:"oneof=0 1 2"` // @gotags: validate:"oneof=0 1 2"
 	// 创建时间
 	Ctime string `protobuf:"bytes,5,opt,name=ctime,proto3" json:"ctime,omitempty"`

@@ -13,12 +13,12 @@ service UserService {
 
 message User {
     //id"
-    int64	id = 1 ;
-    //名称
+    int64	id = 1 ; // @gotags: validate:"oneof 1 2 3"
+    //名称|text|validate:"max=100,min=10"
     string	name = 2 ; // @gotags: validate:"max=100,min=10"
-    //年龄
+    //年龄|number|validate:"max=140,min=18"
     int64	age = 3 ; // @gotags: validate:"max=140,min=18"
-    //性别
+    //性别|select|validate:"oneof=0 1 2"|0:女 1:男 2:无
     int64	sex = 4 ; // @gotags: validate:"oneof=0 1 2"
     //创建时间
     string	ctime = 5 ;

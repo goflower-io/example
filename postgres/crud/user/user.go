@@ -10,28 +10,28 @@ import (
 )
 
 type User struct {
-	Id      int64     `json:"id"`      // Id
-	Name    string    `json:"name"`    // 姓名
-	Age     int64     `json:"age"`     // 年龄
-	Address []string  `json:"address"` // 地址
-	Ctime   time.Time `json:"ctime"`   // 创建时间
-	Mtime   time.Time `json:"mtime"`   // 修改时间
+	Id      int64     `json:"id"`      //
+	Name    string    `json:"name"`    //
+	Age     int64     `json:"age"`     //
+	Address []string  `json:"address"` //
+	Ctime   time.Time `json:"ctime"`   //
+	Mtime   time.Time `json:"mtime"`   //
 }
 
 const (
 	// table tableName is user
 	table = "user"
-	//Id Id
+	//Id
 	Id = "id"
-	//Name 姓名
+	//Name
 	Name = "name"
-	//Age 年龄
+	//Age
 	Age = "age"
-	//Address 地址
+	//Address
 	Address = "address"
-	//Ctime 创建时间
+	//Ctime
 	Ctime = "ctime"
-	//Mtime 修改时间
+	//Mtime
 	Mtime = "mtime"
 )
 
