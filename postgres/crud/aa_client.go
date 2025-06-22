@@ -4,10 +4,10 @@ import (
 	"context"
 	"database/sql"
 
-	"github.com/happycrud/example/postgres/crud/user"
-	"github.com/happycrud/xsql"
+	"github.com/goflower-io/example/postgres/crud/user"
+	"github.com/goflower-io/xsql"
 
-	"github.com/happycrud/xsql/postgres"
+	"github.com/goflower-io/xsql/postgres"
 )
 
 type Client struct {

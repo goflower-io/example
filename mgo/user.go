@@ -3,7 +3,7 @@ package mgo
 import (
 	"time"
 
-	"github.com/happycrud/mgo"
+	"github.com/goflower-io/mgo"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
@@ -71,18 +71,22 @@ func (u *Updater) SetID(a primitive.ObjectID) *Updater {
 	u.UpdateExecutor.Set(ID, a)
 	return u
 }
+
 func (u *Updater) SetName(a string) *Updater {
 	u.UpdateExecutor.Set(Name, a)
 	return u
 }
+
 func (u *Updater) SetAge(a int) *Updater {
 	u.UpdateExecutor.Set(Age, a)
 	return u
 }
+
 func (u *Updater) SetSex(a bool) *Updater {
 	u.UpdateExecutor.Set(Sex, a)
 	return u
 }
+
 func (u *Updater) SetMtime(a time.Time) *Updater {
 	u.UpdateExecutor.Set(Mtime, a)
 	return u

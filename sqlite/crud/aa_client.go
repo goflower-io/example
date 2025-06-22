@@ -4,10 +4,10 @@ import (
 	"context"
 	"database/sql"
 
-	"github.com/happycrud/example/sqlite/crud/user"
-	"github.com/happycrud/xsql"
+	"github.com/goflower-io/example/sqlite/crud/user"
+	"github.com/goflower-io/xsql"
 
-	"github.com/happycrud/xsql/sqlite3"
+	"github.com/goflower-io/xsql/sqlite3"
 )
 
 type Client struct {

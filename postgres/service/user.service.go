@@ -2,14 +2,14 @@ package service
 
 import (
 	"context"
-	"github.com/happycrud/example/postgres/api"
-	"github.com/happycrud/example/postgres/crud"
-	"github.com/happycrud/example/postgres/crud/user"
+	"github.com/goflower-io/example/postgres/api"
+	"github.com/goflower-io/example/postgres/crud"
+	"github.com/goflower-io/example/postgres/crud/user"
 	"math"
 	"strings"
 	"time"
 
-	"github.com/happycrud/xsql"
+	"github.com/goflower-io/xsql"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"

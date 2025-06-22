@@ -4,10 +4,10 @@ import (
 	"context"
 	"database/sql"
 
-	"github.com/happycrud/example/mysql/crud/user"
-	"github.com/happycrud/xsql"
+	"github.com/goflower-io/example/mysql/crud/user"
+	"github.com/goflower-io/xsql"
 
-	"github.com/happycrud/xsql/mysql"
+	"github.com/goflower-io/xsql/mysql"
 )
 
 type Client struct {

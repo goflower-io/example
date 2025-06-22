@@ -6,12 +6,12 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/happycrud/xsql"
+	"github.com/goflower-io/xsql"
 
-	"github.com/happycrud/example/mysql/api"
-	"github.com/happycrud/example/mysql/crud"
-	"github.com/happycrud/example/mysql/service"
-	"github.com/happycrud/example/mysql/views"
+	"github.com/goflower-io/example/mysql/api"
+	"github.com/goflower-io/example/mysql/crud"
+	"github.com/goflower-io/example/mysql/service"
+	"github.com/goflower-io/example/mysql/views"
 )
 
 var (

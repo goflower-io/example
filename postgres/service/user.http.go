@@ -4,10 +4,10 @@ import (
 	"encoding/json"
 	"net/http"
 
-	h1 "github.com/happycrud/golib/net/http"
+	h1 "github.com/goflower-io/golib/net/http"
 
-	"github.com/happycrud/example/postgres/api"
-	"github.com/happycrud/example/postgres/views"
+	"github.com/goflower-io/example/postgres/api"
+	"github.com/goflower-io/example/postgres/views"
 )
 
 type UserHandler struct {

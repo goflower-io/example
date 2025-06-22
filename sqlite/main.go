@@ -5,13 +5,16 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/happycrud/example/sqlite/crud/user"
-	"github.com/happycrud/xsql"
-	"github.com/happycrud/xsql/sqlite3"
+	"github.com/goflower-io/xsql"
+	"github.com/goflower-io/xsql/sqlite3"
+
+	"github.com/goflower-io/example/sqlite/crud/user"
 )
 
-var db *xsql.DB
-var ctx = context.Background()
+var (
+	db  *xsql.DB
+	ctx = context.Background()
+)
 
 func main() {
 	var err error
@@ -45,12 +48,12 @@ func main() {
 	r, err := user.Create(debugdb).SetUser(a, b).Upsert(ctx)
 	fmt.Println(a, b, err, r)
 
-	//db.User.Update().SetName("xxx").Where(user.IdOp.EQ(4005)).Save(ctx)
+	// db.User.Update().SetName("xxx").Where(user.IdOp.EQ(4005)).Save(ctx)
 
-	//list, err := db.User.Find().Select().Where(user.AgeOp.EQ(11)).All(ctx)
-	//b, _ := json.Marshal(list)
-	//fmt.Println(string(b), err)
+	// list, err := db.User.Find().Select().Where(user.AgeOp.EQ(11)).All(ctx)
+	// b, _ := json.Marshal(list)
+	// fmt.Println(string(b), err)
 
-	//db.User.Delete().Where(user.IdOp.EQ(a.Id)).Exec(ctx)
+	// db.User.Delete().Where(user.IdOp.EQ(a.Id)).Exec(ctx)
 
 }

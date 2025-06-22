@@ -3,8 +3,8 @@
 package user
 
 import (
-	"github.com/happycrud/xsql"
-	"github.com/happycrud/xsql/dialect"
+	"github.com/goflower-io/xsql"
+	"github.com/goflower-io/xsql/dialect"
 )
 
 type User struct {

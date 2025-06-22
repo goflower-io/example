@@ -4,10 +4,10 @@ import (
 	"encoding/json"
 	"net/http"
 
-	h1 "github.com/happycrud/golib/net/http"
+	h1 "github.com/goflower-io/golib/net/http"
 
-	"github.com/happycrud/example/mysql/api"
-	"github.com/happycrud/example/mysql/views"
+	"github.com/goflower-io/example/mysql/api"
+	"github.com/goflower-io/example/mysql/views"
 )
 
 type UserHandler struct {

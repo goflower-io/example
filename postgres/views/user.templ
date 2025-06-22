@@ -2,9 +2,9 @@
 package views
 
 import "fmt"
-import 	"github.com/happycrud/example/postgres/api"
-import "github.com/happycrud/golib/net/http/ui"
-import "github.com/happycrud/golib/net/http"
+import 	"github.com/goflower-io/example/postgres/api"
+import "github.com/goflower-io/golib/net/http/ui"
+import "github.com/goflower-io/golib/net/http"
 import "net/url"
 
 
@@ -133,7 +133,7 @@ templ UserCreateView() {
     <div>
 			<lable for="Ctime">Ctime:</lable>
       <input
-				type=""
+				type="text"
 				id="Ctime"
 				name="Ctime"
 			/>
@@ -141,7 +141,7 @@ templ UserCreateView() {
     <div>
 			<lable for="Mtime">Mtime:</lable>
       <input
-				type=""
+				type="text"
 				id="Mtime"
 				name="Mtime"
 			/>
@@ -206,7 +206,7 @@ templ UserUpdateView(a *api.User) {
     <div>
 			<lable for="User.Ctime">Ctime:</lable>
       <input
-				type=""
+				type="text"
 				id="User.Ctime"
 				name="User.Ctime"
 				value={ fmt.Sprintf("%v",a.Ctime) }
@@ -216,7 +216,7 @@ templ UserUpdateView(a *api.User) {
     <div>
 			<lable for="User.Mtime">Mtime:</lable>
       <input
-				type=""
+				type="text"
 				id="User.Mtime"
 				name="User.Mtime"
 				value={ fmt.Sprintf("%v",a.Mtime) }

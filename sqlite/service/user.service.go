@@ -5,11 +5,11 @@ import (
 	"math"
 	"strings"
 
-	"github.com/happycrud/example/sqlite/api"
-	"github.com/happycrud/example/sqlite/crud"
-	"github.com/happycrud/example/sqlite/crud/user"
+	"github.com/goflower-io/example/sqlite/api"
+	"github.com/goflower-io/example/sqlite/crud"
+	"github.com/goflower-io/example/sqlite/crud/user"
 
-	"github.com/happycrud/xsql"
+	"github.com/goflower-io/xsql"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"

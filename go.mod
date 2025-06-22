@@ -1,15 +1,15 @@
-module github.com/happycrud/example
+module github.com/goflower-io/example
 
-go 1.22.3
+go 1.23.0
 
-toolchain go1.22.5
+toolchain go1.23.5
 
 require (
-	github.com/a-h/templ v0.2.778
+	github.com/a-h/templ v0.3.898
 	github.com/go-playground/form v3.1.4+incompatible
-	github.com/happycrud/golib v0.0.4-0.20240913133243-999753a339eb
-	github.com/happycrud/mgo v0.0.0-20230512102854-aea937ead5ab
-	github.com/happycrud/xsql v0.1.1
+	github.com/goflower-io/golib v0.7.0
+	github.com/goflower-io/mgo v0.7.0
+	github.com/goflower-io/xsql v0.7.0
 	go.mongodb.org/mongo-driver v1.11.6
 	google.golang.org/grpc v1.64.0
 	google.golang.org/protobuf v1.34.1
@@ -44,12 +44,12 @@ require (
 	github.com/xdg-go/scram v1.1.1 // indirect
 	github.com/xdg-go/stringprep v1.0.3 // indirect
 	github.com/youmark/pkcs8 v0.0.0-20181117223130-1be2e3e5546d // indirect
-	golang.org/x/crypto v0.26.0 // indirect
+	golang.org/x/crypto v0.37.0 // indirect
 	golang.org/x/exp v0.0.0-20230510235704-dd950f8aeaea // indirect
-	golang.org/x/net v0.28.0 // indirect
-	golang.org/x/sync v0.8.0 // indirect
-	golang.org/x/sys v0.23.0 // indirect
-	golang.org/x/text v0.17.0 // indirect
+	golang.org/x/net v0.39.0 // indirect
+	golang.org/x/sync v0.13.0 // indirect
+	golang.org/x/sys v0.32.0 // indirect
+	golang.org/x/text v0.24.0 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20240318140521-94a12d6c2237 // indirect
 	gopkg.in/go-playground/assert.v1 v1.2.1 // indirect
 )

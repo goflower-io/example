@@ -2,52 +2,57 @@
 package views
 
 import "fmt"
-import "github.com/happycrud/example/mysql/api"
-import "github.com/happycrud/golib/net/http/ui"
-import "github.com/happycrud/golib/net/http"
+import 	"github.com/goflower-io/example/mysql/api"
+import "github.com/goflower-io/golib/net/http/ui"
+import "github.com/goflower-io/golib/net/http"
 import "net/url"
 
+
+
+
+
+
 templ UserShell() {
-	@Index() {
-		<div>
+ @Index(){
+<div>
 			{ children... }
-		</div>
-	}
+	</div>
+ }
 }
 
-templ UserListPage(resp *api.ListUsersResp, path string, form url.Values) {
+templ UserListPage(resp *api.ListUsersResp,path string, form url.Values) {
 	@UserShell() {
-		@UserListView(resp, path, form)
+		@UserListView(resp,path,form)
 	}
 }
 
-templ UserListView(resp *api.ListUsersResp, path string, form url.Values) {
+templ UserListView(resp *api.ListUsersResp,path string,form url.Values) {
 	@ui.PaginationView(
 		"User", path, form, http.CaculatePaginator(resp.GetPage(), resp.GetPageSize(), resp.GetTotalCount())) {
-		<table>
-			<tr>
-				<th>Id</th>
-				<th>Name</th>
-				<th>Age</th>
-				<th>Sex</th>
-				<th>Ctime</th>
-				<th>Mtime</th>
-			</tr>
-			for idx,a :=range resp.GetUsers() {
-				@UserItemView(idx, a)
-			}
-		</table>
-	}
+  <table>
+    <tr>
+  <th>Id</th>
+  <th>Name</th>
+  <th>Age</th>
+  <th>Sex</th>
+  <th>Ctime</th>
+  <th>Mtime</th>
+    </tr>
+		for idx,a :=range resp.GetUsers() {
+			@UserItemView(idx, a)
+		}
+  </table>
+  }
 }
 
 templ UserItemView(idx int, a *api.User) {
 	<tr id={ fmt.Sprintf("UserItem_%d", idx) }>
-		<td>{ fmt.Sprintf("%v",a.Id) }</td>
-		<td>{ fmt.Sprintf("%v",a.Name) }</td>
-		<td>{ fmt.Sprintf("%v",a.Age) }</td>
-		<td>{ fmt.Sprintf("%v",a.Sex) }</td>
-		<td>{ fmt.Sprintf("%v",a.Ctime) }</td>
-		<td>{ fmt.Sprintf("%v",a.Mtime) }</td>
+     <td>{fmt.Sprintf("%v",a.Id)}</td>
+     <td>{fmt.Sprintf("%v",a.Name)}</td>
+     <td>{fmt.Sprintf("%v",a.Age)}</td>
+     <td>{fmt.Sprintf("%v",a.Sex)}</td>
+     <td>{fmt.Sprintf("%v",a.Ctime)}</td>
+     <td>{fmt.Sprintf("%v",a.Mtime)}</td>
 	</tr>
 }
 
@@ -58,30 +63,30 @@ templ UserDetailPage(a *api.User) {
 }
 
 templ UserDetailView(a *api.User) {
-	<div>
-		<lable for="Id">Id:</lable>
-		<div>{ fmt.Sprintf("%v", a.Id) }</div>
-	</div>
-	<div>
-		<lable for="Name">Name:</lable>
-		<div>{ fmt.Sprintf("%v", a.Name) }</div>
-	</div>
-	<div>
-		<lable for="Age">Age:</lable>
-		<div>{ fmt.Sprintf("%v", a.Age) }</div>
-	</div>
-	<div>
-		<lable for="Sex">Sex:</lable>
-		<div>{ fmt.Sprintf("%v", a.Sex) }</div>
-	</div>
-	<div>
-		<lable for="Ctime">Ctime:</lable>
-		<div>{ fmt.Sprintf("%v", a.Ctime) }</div>
-	</div>
-	<div>
-		<lable for="Mtime">Mtime:</lable>
-		<div>{ fmt.Sprintf("%v", a.Mtime) }</div>
-	</div>
+  <div>
+  <lable for="Id">Id:</lable>
+  <div>{fmt.Sprintf("%v", a.Id) }</div>
+  </div>
+  <div>
+  <lable for="Name">Name:</lable>
+  <div>{fmt.Sprintf("%v", a.Name) }</div>
+  </div>
+  <div>
+  <lable for="Age">Age:</lable>
+  <div>{fmt.Sprintf("%v", a.Age) }</div>
+  </div>
+  <div>
+  <lable for="Sex">Sex:</lable>
+  <div>{fmt.Sprintf("%v", a.Sex) }</div>
+  </div>
+  <div>
+  <lable for="Ctime">Ctime:</lable>
+  <div>{fmt.Sprintf("%v", a.Ctime) }</div>
+  </div>
+  <div>
+  <lable for="Mtime">Mtime:</lable>
+  <div>{fmt.Sprintf("%v", a.Mtime) }</div>
+  </div>
 }
 
 templ UserCreatePage() {
@@ -94,52 +99,52 @@ templ UserCreateView() {
 	<form
 		hx-boost="true"
 		hx-put="/UserService/CreateUser"
-		hx-target="this"
+    hx-target="this"
 		hx-swap="outerHTML"
 	>
-		<div>
-			<lable for="Id">Id</lable>
-			<input type="text" id="Id" name="Id" disabled/>
-		</div>
-		<div>
+  <div>
+  <lable for="Id">Id</lable>
+		<input type="text" id="Id" name="Id" disabled/>
+</div> 
+    <div>
 			<lable for="Name">Name:</lable>
-			<input
+      <input
 				type="text"
 				id="Name"
 				name="Name"
 			/>
-		</div>
-		<div>
+		</div> 
+    <div>
 			<lable for="Age">Age:</lable>
-			<input
+      <input
 				type="number"
 				id="Age"
 				name="Age"
 			/>
-		</div>
-		<div>
+		</div> 
+    <div>
 			<lable for="Sex">Sex:</lable>
-			<select
-				id="Sex"
+      <select 	
+        id="Sex"
 				name="Sex"
-			>
-				<option value="0">女</option>
-				<option value="1">男</option>
-				<option value="2">无</option>
-			</select>
-		</div>
-		<div>
+      >
+            <option value="0">女</option>
+            <option value="1">男</option>
+            <option value="2">无</option>
+      </select>
+		</div> 
+    <div>
 			<lable for="Ctime">Ctime:</lable>
-			<input
-				type=""
+      <input
+				type="text"
 				id="Ctime"
 				name="Ctime"
 			/>
-		</div>
-		<div>
+		</div> 
+    <div>
 			<lable for="Mtime">Mtime:</lable>
-			<input
-				type=""
+      <input
+				type="text"
 				id="Mtime"
 				name="Mtime"
 			/>
@@ -157,8 +162,8 @@ templ UserUpdatePage(a *api.User) {
 templ UserUpdateView(a *api.User) {
 	<form
 		hx-boost="true"
-		hx-post={ "/UserService/UpdateUser?User.Id=" + fmt.Sprintf("%d", a.Id) }
-		hx-target="this"
+		hx-post={ "/UserService/UpdateUser?User.Id=" + fmt.Sprintf("%d",a.Id) }
+    hx-target="this"
 		hx-swap="outerHTML"
 	>
 		<div>
@@ -168,79 +173,79 @@ templ UserUpdateView(a *api.User) {
 				type="text"
 				id="User.Id"
 				name="User.Id"
-				value={ fmt.Sprintf("%d", a.Id) }
+				value={ fmt.Sprintf("%d",a.Id) }
 			/>
-		</div>
-		<div>
+		</div> 
+    <div>
 			<lable for="User.Name">Name:</lable>
-			<input
+      <input
 				type="text"
 				id="User.Name"
 				name="User.Name"
-				value={ fmt.Sprintf("%v", a.Name) }
+				value={ fmt.Sprintf("%v",a.Name) }
 				hx-on:change="document.getElementById('User.Name.Mask').checked = true;"
 			/>
-		</div>
-		<div>
+		</div> 
+    <div>
 			<lable for="User.Age">Age:</lable>
-			<input
+      <input
 				type="number"
 				id="User.Age"
 				name="User.Age"
-				value={ fmt.Sprintf("%v", a.Age) }
+				value={ fmt.Sprintf("%v",a.Age) }
 				hx-on:change="document.getElementById('User.Age.Mask').checked = true;"
 			/>
-		</div>
-		<div>
+		</div> 
+    <div>
 			<lable for="User.Sex">Sex:</lable>
-			<select
-				id="User.Sex"
+      <select 	
+        id="User.Sex"
 				name="User.Sex"
-				value={ fmt.Sprintf("%v", a.Sex) }
+				value={ fmt.Sprintf("%v",a.Sex) }
 				hx-on:change="document.getElementById('User.Sex.Mask').checked = true;"
-			>
-				if a.Sex == 0 {
-					<option value="0" selected>女</option>
-				} else {
-					<option value="0">女</option>
-				}
-				if a.Sex == 1 {
-					<option value="1" selected>男</option>
-				} else {
-					<option value="1">男</option>
-				}
-				if a.Sex == 2 {
-					<option value="2" selected>无</option>
-				} else {
-					<option value="2">无</option>
-				}
-			</select>
-		</div>
-		<div>
+      >
+         if a.Sex == 0{
+            <option value="0" selected>女</option>
+         }else{
+            <option value="0">女</option>
+         }
+         if a.Sex == 1{
+            <option value="1" selected>男</option>
+         }else{
+            <option value="1">男</option>
+         }
+         if a.Sex == 2{
+            <option value="2" selected>无</option>
+         }else{
+            <option value="2">无</option>
+         }
+      </select>
+		</div> 
+    <div>
 			<lable for="User.Ctime">Ctime:</lable>
-			<input
-				type=""
+      <input
+				type="text"
 				id="User.Ctime"
 				name="User.Ctime"
-				value={ fmt.Sprintf("%v", a.Ctime) }
+				value={ fmt.Sprintf("%v",a.Ctime) }
 				hx-on:change="document.getElementById('User.Ctime.Mask').checked = true;"
 			/>
-		</div>
-		<div>
+		</div> 
+    <div>
 			<lable for="User.Mtime">Mtime:</lable>
-			<input
-				type=""
+      <input
+				type="text"
 				id="User.Mtime"
 				name="User.Mtime"
-				value={ fmt.Sprintf("%v", a.Mtime) }
+				value={ fmt.Sprintf("%v",a.Mtime) }
 				hx-on:change="document.getElementById('User.Mtime.Mask').checked = true;"
 			/>
 		</div>
-		<input type="submit" value="submit"/>
-		<input type="checkbox" value="2" hidden id="User.Name.Mask" name="Masks"/>
-		<input type="checkbox" value="3" hidden id="User.Age.Mask" name="Masks"/>
-		<input type="checkbox" value="4" hidden id="User.Sex.Mask" name="Masks"/>
-		<input type="checkbox" value="5" hidden id="User.Ctime.Mask" name="Masks"/>
+		<input type="submit" value="submit"/> 
+		<input type="checkbox" value="2" hidden id="User.Name.Mask" name="Masks"/> 
+		<input type="checkbox" value="3" hidden id="User.Age.Mask" name="Masks"/> 
+		<input type="checkbox" value="4" hidden id="User.Sex.Mask" name="Masks"/> 
+		<input type="checkbox" value="5" hidden id="User.Ctime.Mask" name="Masks"/> 
 		<input type="checkbox" value="6" hidden id="User.Mtime.Mask" name="Masks"/>
 	</form>
 }

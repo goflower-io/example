@@ -7,14 +7,17 @@ import (
 	"testing"
 	"time"
 
-	"github.com/happycrud/mgo"
+	"github.com/goflower-io/mgo"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 func TestMgo(t *testing.T) {
-	client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI("mongodb://localhost:27017"))
+	client, err := mongo.Connect(
+		context.TODO(),
+		options.Client().ApplyURI("mongodb://localhost:27017"),
+	)
 	if err != nil {
 		panic(err)
 	}
@@ -24,19 +27,25 @@ func TestMgo(t *testing.T) {
 		}
 	}()
 	coll := client.Database("example").Collection("user")
-	//DeleteUser(coll)
-	//UpdateUser(coll)
+	// DeleteUser(coll)
+	// UpdateUser(coll)
 	FindUser(coll)
-	//Insert(coll)
-	//FindUser(coll)
+	// Insert(coll)
+	// FindUser(coll)
 }
 
 func FindUser(coll *mongo.Collection) {
-	//id, _ := primitive.ObjectIDFromHex("63ff2f14983bef62a8c881c0")
+	// id, _ := primitive.ObjectIDFromHex("63ff2f14983bef62a8c881c0")
 	q := mgo.And(mgo.In(Name, "aa"))
 	qq, _ := json.Marshal(q.Query())
 	fmt.Println(string(qq))
-	u, err := Find(coll).Filter(q.Query()...).Limit(1).Skip(1).SortDesc(Age).All(context.Background())
+	u, err := Find(
+		coll,
+	).Filter(q.Query()...).
+		Limit(1).
+		Skip(1).
+		SortDesc(Age).
+		All(context.Background())
 	b, _ := json.Marshal(u)
 	fmt.Println(string(b), err)
 }
@@ -53,7 +62,6 @@ func DeleteUser(coll *mongo.Collection) {
 }
 
 func Insert(coll *mongo.Collection) {
-
 	var list []*User
 	for i := 0; i < 10; i++ {
 		u := &User{
@@ -71,17 +79,17 @@ func Insert(coll *mongo.Collection) {
 }
 
 func TestPredicatt(t *testing.T) {
-	//d := NEQ(Name, "dxxx")
-	//x := In(Age, []int{1, 2, 3})
-	//p := Nor(d, x).Query()
-	//b, _ := json.Marshal(p)
-	//fmt.Println(string(b))
+	// d := NEQ(Name, "dxxx")
+	// x := In(Age, []int{1, 2, 3})
+	// p := Nor(d, x).Query()
+	// b, _ := json.Marshal(p)
+	// fmt.Println(string(b))
 }
 
 func TestParse(t *testing.T) {
-	//temp, _ := os.ReadFile("../templates/builder_mgo.tmpl")
-	//r, _ := template.New("").Parse(string(temp))
-	//x := mgo.ParseMongoStruct("./user.go", "User")
+	// temp, _ := os.ReadFile("../templates/builder_mgo.tmpl")
+	// r, _ := template.New("").Parse(string(temp))
+	// x := mgo.ParseMongoStruct("./user.go", "User")
 
 	// f, err := os.Create("user.go")
 	// if err != nil {
@@ -89,5 +97,4 @@ func TestParse(t *testing.T) {
 	// }
 	// r.Execute(f, x)
 	// f.Close()
-
 }

@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/happycrud/xsql"
-	"github.com/happycrud/xsql/postgres"
+	"github.com/goflower-io/xsql"
+	"github.com/goflower-io/xsql/postgres"
 
-	"github.com/happycrud/example/postgres/crud/user"
+	"github.com/goflower-io/example/postgres/crud/user"
 )
 
 var (
@@ -34,14 +34,12 @@ func main() {
 	a := &user.User{
 		Id:    3,
 		Name:  "sdfs",
-		Age:   []int32{11, 12, 22},
 		Ctime: time.Now(),
 		Mtime: time.Now(),
 	}
 	b := &user.User{
 		Id:    4,
 		Name:  "a",
-		Age:   []int32{22, 123},
 		Ctime: time.Now(),
 		Mtime: time.Now(),
 	}
@@ -52,5 +50,5 @@ func main() {
 	for _, v := range list {
 		fmt.Printf("%+v ,err:%v\n", v, err)
 	}
-	user.Update(debugdb).SetAge([]int32{444, 444, 44}).Where(user.IdOp.EQ(1)).Save(ctx)
+	user.Update(debugdb).SetAge(44).Where(user.IdOp.EQ(1)).Save(ctx)
 }
