@@ -156,7 +156,7 @@ func (s *UserServiceImpl) ListUsersMore(ctx context.Context, req *api.ListUsersM
 			return nil, err
 		}
 		cursor = &c
-
+		fmt.Println(cursor)
 	}
 	if cursor == nil {
 		return nil, errors.New("cursor error")
@@ -233,7 +233,7 @@ func (s *UserServiceImpl) ListUsersMore(ctx context.Context, req *api.ListUsersM
 			}
 			if len(ps) > 0 {
 				p := xsql.And(ps...)
-				finder.WhereP(p)
+				psOr = append(psOr, p)
 			}
 		}
 		if len(psOr) > 0 {
@@ -247,41 +247,41 @@ func (s *UserServiceImpl) ListUsersMore(ctx context.Context, req *api.ListUsersM
 	}
 	if len(list) <= int(size) {
 		return &api.ListUsersMoreResp{Users: convertUserList(list), NextPageToken: ""}, nil
-	} else {
-
-		// (ctime < ?)
-		// OR (ctime = ? AND name > ?)
-		// OR (ctime = ? AND name = ? AND id < ?)
-		last := list[len(list)-1]
-		nextPageFilters := []*api.UserFilterOr{}
-		nextpageEqFilters := []*api.UserFilter{}
-		for _, v := range orderbys {
-			filterOr := &api.UserFilterOr{}
-			f := &api.UserFilter{
-				Field: v.GetFiled(),
-			}
-			if v.Desc {
-				f.Op = "<="
-			} else {
-				f.Op = ">="
-			}
-			x, ok := GetFieldByJSONTag(last, strings.TrimPrefix(v.String(), "User_"))
-			if !ok {
-				continue
-			}
-			f.Val = fmt.Sprintf("%v", x)
-			filterOr.Filters = append(filterOr.Filters, nextpageEqFilters...)
-			filterOr.Filters = append(filterOr.Filters, f)
-
-			nextPageFilters = append(nextPageFilters, filterOr)
-			fEq := &api.UserFilter{Field: v.GetFiled(), Op: "=", Val: f.Val}
-			nextpageEqFilters = append(nextpageEqFilters, fEq)
-		}
-		cursor := &api.UserCursor{NextPageFilters: nextPageFilters, Orderbys: orderbys, Filters: filters, SelectFields: selectFields}
-		cursorData, _ := proto.Marshal(cursor)
-		token := base64.URLEncoding.EncodeToString(cursorData)
-		return &api.ListUsersMoreResp{Users: convertUserList(list), NextPageToken: token, HasMore: true}, nil
 	}
+
+	// (ctime < ?)
+	// OR (ctime = ? AND name > ?)
+	// OR (ctime = ? AND name = ? AND id < ?)
+	last := list[len(list)-1]
+	nextPageFilters := []*api.UserFilterOr{}
+	nextpageEqFilters := []*api.UserFilter{}
+	for _, v := range orderbys {
+		filterOr := &api.UserFilterOr{}
+		f := &api.UserFilter{
+			Field: v.GetFiled(),
+		}
+		if v.Desc {
+			f.Op = "<="
+		} else {
+			f.Op = ">="
+		}
+		x, ok := GetFieldByJSONTag(last, strings.TrimPrefix(v.Filed.String(), "User_"))
+		if !ok {
+			fmt.Println("contineu")
+			continue
+		}
+		f.Val = fmt.Sprintf("%v", x)
+		filterOr.Filters = append(filterOr.Filters, nextpageEqFilters...)
+		filterOr.Filters = append(filterOr.Filters, f)
+		nextPageFilters = append(nextPageFilters, filterOr)
+		fEq := &api.UserFilter{Field: v.GetFiled(), Op: "=", Val: f.Val}
+		nextpageEqFilters = append(nextpageEqFilters, fEq)
+	}
+	nextcursor := &api.UserCursor{NextPageFilters: nextPageFilters, Orderbys: orderbys, Filters: filters, SelectFields: selectFields}
+	cursorData, _ := proto.Marshal(nextcursor)
+	token := base64.URLEncoding.EncodeToString(cursorData)
+	list2 := list[:len(list)-1]
+	return &api.ListUsersMoreResp{Users: convertUserList(list2), NextPageToken: token, HasMore: true}, nil
 }
 
 // ListUsers ListUsers
@@ -382,6 +382,7 @@ func GetFieldByJSONTag(obj any, tag string) (any, bool) {
 		field := t.Field(i)
 
 		jsonTag := field.Tag.Get("json")
+		fmt.Println(jsonTag)
 		if jsonTag == "" {
 			continue
 		}

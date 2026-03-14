@@ -50,7 +50,7 @@ message ListUsersReq{
     repeated UserField select_fields = 6; 
 }
 message UserOrderBy {
-  UserField filed = 1;
+  UserField field = 1;
   bool desc = 2;
 } 
 message UserFilterOr{
