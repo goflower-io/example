@@ -2,16 +2,24 @@ package service
 
 import (
 	"context"
+	"encoding/base64"
+	"errors"
+	"fmt"
+	"math"
+	"slices"
+	"strings"
+
+	"google.golang.org/protobuf/types/known/timestamppb"
+	"time"
+
 	"github.com/goflower-io/example/mysql/api"
 	"github.com/goflower-io/example/mysql/crud"
 	"github.com/goflower-io/example/mysql/crud/user"
-	"math"
-	"strings"
-	"time"
 
 	"github.com/goflower-io/xsql"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
 
@@ -96,17 +104,9 @@ func (s *UserServiceImpl) UpdateUser(ctx context.Context, req *api.UpdateUserReq
 		case api.UserField_User_sex:
 			update.SetSex(req.GetUser().GetSex())
 		case api.UserField_User_ctime:
-			t, err := time.ParseInLocation("2006-01-02 15:04:05", req.GetUser().GetCtime(), time.Local)
-			if err != nil {
-				return nil, status.Error(codes.InvalidArgument, err.Error())
-			}
-			update.SetCtime(t)
+			update.SetCtime(req.GetUser().GetCtime().AsTime())
 		case api.UserField_User_mtime:
-			t, err := time.ParseInLocation("2006-01-02 15:04:05", req.GetUser().GetMtime(), time.Local)
-			if err != nil {
-				return nil, status.Error(codes.InvalidArgument, err.Error())
-			}
-			update.SetMtime(t)
+			update.SetMtime(req.GetUser().GetMtime().AsTime())
 		}
 	}
 	_, err := update.
@@ -155,16 +155,16 @@ func (s *UserServiceImpl) ListUsers(ctx context.Context, req *api.ListUsersReq) 
 	if offset < 0 {
 		offset = 0
 	}
-	if len(req.GetFields()) == 0 {
+	if len(req.GetSelectFields()) == 0 {
 		for field := range api.UserField_name {
 			if field > 0 {
-				req.Fields = append(req.Fields, api.UserField(field))
+				req.SelectFields = append(req.SelectFields, api.UserField(field))
 			}
 		}
 	}
 
-	selectFields := make([]string, 0, len(req.GetFields()))
-	for _, v := range req.GetFields() {
+	selectFields := make([]string, 0, len(req.GetSelectFields()))
+	for _, v := range req.GetSelectFields() {
 		selectFields = append(selectFields, strings.TrimPrefix(v.String(), "User_"))
 	}
 	finder := s.Client.User.
@@ -173,14 +173,13 @@ func (s *UserServiceImpl) ListUsers(ctx context.Context, req *api.ListUsersReq) 
 		Offset(offset).
 		Limit(size)
 
-	if req.GetOrderby() == api.UserField_User_unknow {
-		req.Orderby = api.UserField_User_id
-	}
-	odb := strings.TrimPrefix(req.GetOrderby().String(), "User_")
-	if req.GetDesc() {
-		finder.OrderDesc(odb)
-	} else {
-		finder.OrderAsc(odb)
+	for _, v := range req.GetOrderbys() {
+		odb := strings.TrimPrefix(v.GetField().String(), "User_")
+		if v.GetDesc() {
+			finder.OrderDesc(odb)
+		} else {
+			finder.OrderAsc(odb)
+		}
 	}
 	counter := s.Client.User.
 		Find().
@@ -212,14 +211,153 @@ func (s *UserServiceImpl) ListUsers(ctx context.Context, req *api.ListUsersReq) 
 	return &api.ListUsersResp{Users: convertUserList(list), TotalCount: int32(count), PageCount: pageCount, PageSize: size, Page: page}, nil
 }
 
+func (s *UserServiceImpl) ListUsersMore(ctx context.Context, req *api.ListUsersMoreReq) (*api.ListUsersMoreResp, error) {
+
+	size := req.GetPageSize()
+	if size <= 0 {
+		size = 20
+	}
+	firstPage := req.GetPageToken() == ""
+	cursor := req.GetCursor()
+	if !firstPage {
+		data, err := base64.URLEncoding.DecodeString(req.GetPageToken())
+		if err != nil {
+			return nil, err
+		}
+		var c api.UserCursor
+		if proto.Unmarshal(data, &c) != nil {
+			return nil, err
+		}
+		cursor = &c
+	}
+	if cursor == nil {
+		return nil, errors.New("cursor error")
+	}
+	selectFields := cursor.GetSelectFields()
+	orderbys := cursor.GetOrderbys()
+	filters := cursor.GetFilters()
+	if firstPage {
+		orderbyHasPrimeKey := slices.ContainsFunc(orderbys, func(o *api.UserOrderBy) bool {
+			return o.GetField() == api.UserField_User_id
+		})
+		if !orderbyHasPrimeKey {
+			orderbys = append(orderbys, &api.UserOrderBy{Field: api.UserField_User_id, Desc: true})
+		}
+
+		if len(selectFields) != 0 {
+			for _, v := range orderbys {
+				selectFieldHasOrderByFields := slices.ContainsFunc(selectFields, func(o api.UserField) bool {
+					return o == v.GetField()
+				})
+				if !selectFieldHasOrderByFields {
+					selectFields = append(selectFields, v.GetField())
+				}
+			}
+		}
+		if len(selectFields) == 0 {
+			for field := range api.UserField_name {
+				if field > 0 {
+					selectFields = append(selectFields, api.UserField(field))
+				}
+			}
+		}
+	}
+	selectFieldsStr := make([]string, 0, len(selectFields))
+	for _, v := range selectFields {
+		selectFieldsStr = append(selectFieldsStr, strings.TrimPrefix(v.String(), "User_"))
+	}
+	finder := s.Client.User.
+		Find().
+		Select(selectFieldsStr...).
+		Limit(size + 1)
+	for _, v := range orderbys {
+		odb := strings.TrimPrefix(v.GetField().String(), "User_")
+		if v.GetDesc() {
+			finder.OrderDesc(odb)
+		} else {
+			finder.OrderAsc(odb)
+		}
+	}
+	var ps []*xsql.Predicate
+	for _, v := range cursor.GetFilters() {
+		p, err := xsql.GenP(strings.TrimPrefix(v.Field.String(), "User_"), v.Op, v.Val)
+		if err != nil {
+			return nil, err
+		}
+		ps = append(ps, p)
+	}
+	if len(ps) > 0 {
+		p := xsql.And(ps...)
+		finder.WhereP(p)
+	}
+	if !firstPage {
+		var psOr []*xsql.Predicate
+		for _, v := range cursor.GetNextPageFilters() {
+			var ps []*xsql.Predicate
+			for _, v2 := range v.GetFilters() {
+				p, err := xsql.GenP(strings.TrimPrefix(v2.Field.String(), "User_"), v2.Op, v2.Val)
+				if err != nil {
+					return nil, err
+				}
+				ps = append(ps, p)
+			}
+			if len(ps) > 0 {
+				p := xsql.And(ps...)
+				psOr = append(psOr, p)
+			}
+		}
+		if len(psOr) > 0 {
+			p := xsql.Or(psOr...)
+			finder.WhereP(p)
+		}
+	}
+	list, err := finder.All(ctx)
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+	if len(list) <= int(size) {
+		return &api.ListUsersMoreResp{Users: convertUserList(list), NextPageToken: ""}, nil
+	}
+
+	last := list[len(list)-1]
+	nextPageFilters := []*api.UserFilterOr{}
+	nextpageEqFilters := []*api.UserFilter{}
+	for _, v := range orderbys {
+		filterOr := &api.UserFilterOr{}
+		f := &api.UserFilter{
+			Field: v.GetField(),
+		}
+		if v.Desc {
+			f.Op = "<="
+		} else {
+			f.Op = ">="
+		}
+		x, ok := xsql.GetFieldByJSONTag(last, strings.TrimPrefix(v.Field.String(), "User_"))
+		if !ok {
+			fmt.Println("contineu")
+			continue
+		}
+		f.Val = fmt.Sprintf("%v", x)
+		filterOr.Filters = append(filterOr.Filters, nextpageEqFilters...)
+		filterOr.Filters = append(filterOr.Filters, f)
+		nextPageFilters = append(nextPageFilters, filterOr)
+		fEq := &api.UserFilter{Field: v.GetField(), Op: "=", Val: f.Val}
+		nextpageEqFilters = append(nextpageEqFilters, fEq)
+	}
+	nextcursor := &api.UserCursor{NextPageFilters: nextPageFilters, Orderbys: orderbys, Filters: filters, SelectFields: selectFields}
+	cursorData, _ := proto.Marshal(nextcursor)
+	token := base64.URLEncoding.EncodeToString(cursorData)
+	list2 := list[:len(list)-1]
+	return &api.ListUsersMoreResp{Users: convertUserList(list2), NextPageToken: token, HasMore: true}, nil
+}
 func convertUser(a *user.User) *api.User {
 	return &api.User{
 		Id:    a.Id,
 		Name:  a.Name,
 		Age:   a.Age,
 		Sex:   a.Sex,
-		Ctime: a.Ctime.Format("2006-01-02 15:04:05"),
-		Mtime: a.Mtime.Format("2006-01-02 15:04:05"),
+		Ctime: timestamppb.New(a.Ctime),
+		Mtime: timestamppb.New(a.Mtime),
 	}
 }
 

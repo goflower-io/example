@@ -1,6 +1,7 @@
 syntax="proto3";
 option go_package = "/api";
 
+
 import "google/protobuf/empty.proto";
 
 service UserService { 
@@ -9,6 +10,7 @@ service UserService {
     rpc UpdateUser(UpdateUserReq)returns(User);
     rpc GetUser(UserId)returns(User);
     rpc ListUsers(ListUsersReq)returns(ListUsersResp);
+    rpc ListUsersMore(ListUsersMoreReq)returns(ListUsersMoreResp);
 }
 
 message User {
@@ -42,20 +44,27 @@ message UpdateUserReq{
     repeated UserField masks  = 2 ;
 }
 
+message UserOrderBy {
+  UserField field = 1;
+  bool desc = 2;
+} 
+message UserFilterOr{
+ repeated UserFilter filters = 1;
+}
+message UserFilter{
+    UserField field = 1;
+    string op = 2;
+    string val = 3;
+}
+
 
 message ListUsersReq{
     int32 page = 1 ;
     int32 page_size = 2 ;
-    UserField orderby = 3 ; 
-    bool desc = 4; 
-    repeated UserFilter filters = 5 ; 
-    repeated UserField fields = 6; 
-}
+    repeated UserOrderBy orderbys = 3 ; 
+    repeated UserFilter filters = 4 ; 
+    repeated UserField  select_fields = 5; 
 
-message UserFilter{
-     UserField field = 1;
-    string op = 2;
-    string val = 3;
 }
 
 message ListUsersResp{
@@ -65,3 +74,22 @@ message ListUsersResp{
     int32 page_size = 4;
     int32 page = 5;
 }
+
+
+message UserCursor{
+    repeated UserFilterOr next_page_filters = 1 ; 
+    repeated UserOrderBy orderbys = 2 ; 
+    repeated UserFilter filters = 3 ; 
+    repeated UserField select_fields = 4; 
+}
+
+message ListUsersMoreReq{
+    string page_token = 1;  
+    int32 page_size = 2 ;
+    UserCursor cursor = 3;
+}
+message ListUsersMoreResp{
+    string next_page_token = 1;
+    repeated User users = 2 ; 
+    bool has_more = 3;
+} 

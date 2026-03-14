@@ -7,6 +7,8 @@ import (
 
 	"github.com/goflower-io/xsql"
 	"github.com/goflower-io/xsql/dialect"
+	"maps"
+	"slices"
 )
 
 type User struct {
@@ -54,10 +56,10 @@ var columnsSet = map[string]struct{}{
 }
 
 func Columns() []string {
-	return columns
+	return slices.Clone(columns)
 }
 func ColumnsSet() map[string]struct{} {
-	return columnsSet
+	return maps.Clone(columnsSet)
 }
 
 func (a *User) NewPtr() any {
@@ -116,10 +118,10 @@ func (a *User) SetAutoIncrPk(id int64) {
 }
 
 func (a *User) Columns() []string {
-	return columns
+	return slices.Clone(columns)
 }
 func (a *User) ColumnsSet() map[string]struct{} {
-	return columnsSet
+	return maps.Clone(columnsSet)
 }
 func (a *User) Schema() string {
 	return ""
