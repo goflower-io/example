@@ -119,32 +119,6 @@ CREATE TABLE `user` (
 
 ---
 
-## HTTP API Testing
-
-```bash
-BASE=http://localhost:8088
-
-# Create user
-curl -X POST "$BASE/UserService/CreateUser" \
-  -d "name=alice&age=18&sex=1"
-
-# Get user
-curl "$BASE/UserService/GetUser?id=1"
-
-# List users (JSON response)
-curl -H "Accept: application/json" \
-  "$BASE/UserService/ListUsers?page=1&page_size=10"
-
-# Update user (name + age only)
-curl -X POST "$BASE/UserService/UpdateUser" \
-  -d "user.id=1&user.name=bob&user.age=20&masks=2&masks=3"
-
-# Delete user
-curl "$BASE/UserService/DeleteUser?id=1"
-```
-
----
-
 ## gRPC API Testing with grpcurl
 
 To use gRPC directly, wire the service through [golib](https://github.com/goflower-io/golib)'s `App` in `main.go`:

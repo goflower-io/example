@@ -119,32 +119,6 @@ CREATE TABLE `user` (
 
 ---
 
-## HTTP 接口测试
-
-```bash
-BASE=http://localhost:8088
-
-# 创建用户
-curl -X POST "$BASE/UserService/CreateUser" \
-  -d "name=alice&age=18&sex=1"
-
-# 查询用户
-curl "$BASE/UserService/GetUser?id=1"
-
-# 查询用户列表（JSON 响应）
-curl -H "Accept: application/json" \
-  "$BASE/UserService/ListUsers?page=1&page_size=10"
-
-# 更新用户（只更新 name 和 age）
-curl -X POST "$BASE/UserService/UpdateUser" \
-  -d "user.id=1&user.name=bob&user.age=20&masks=2&masks=3"
-
-# 删除用户
-curl "$BASE/UserService/DeleteUser?id=1"
-```
-
----
-
 ## 使用 grpcurl 测试 gRPC 接口
 
 通过 [golib](https://github.com/goflower-io/golib) 的 `App` 在 `main.go` 中接入 gRPC：
