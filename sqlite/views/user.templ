@@ -2,9 +2,11 @@ package views
 
 import "fmt"
 import "net/url"
-import "time"
 import "github.com/goflower-io/golib/net/app"
-import "github.com/goflower-io/example/mysql/api"
+import "github.com/goflower-io/example/sqlite/api"
+
+
+
 
 // _userSvcPath is the HTTP route prefix for all User handlers.
 // Change the value if your proto uses a package prefix, e.g. "/mypkg.UserService".
@@ -56,7 +58,6 @@ templ UserListView(resp *api.ListUsersResp, path string, form url.Values) {
 					<th>Id</th>
 					<th>Name</th>
 					<th>Age</th>
-					<th>Sex</th>
 					<th>Ctime</th>
 					<th>Mtime</th>
 					<th>Actions</th>
@@ -78,17 +79,17 @@ templ UserItemView(a *api.User) {
 		<td>{ fmt.Sprint(a.GetId()) }</td>
 		<td>{ fmt.Sprint(a.GetName()) }</td>
 		<td>{ fmt.Sprint(a.GetAge()) }</td>
-		<td>{ fmt.Sprint(a.GetSex()) }</td>
-		<td>{ a.GetCtime().AsTime().Format(time.DateTime) }</td>
-		<td>{ a.GetMtime().AsTime().Format(time.DateTime) }</td>
+		<td>{ fmt.Sprint(a.GetCtime()) }</td>
+		<td>{ fmt.Sprint(a.GetMtime()) }</td>
 		<td>
 			<a href={ templ.SafeURL(fmt.Sprintf(_userSvcPath+"/GetUser?Id=%v", a.GetId())) }>View</a>
 			<a href={ templ.SafeURL(fmt.Sprintf(_userSvcPath+"/UpdateUser?Id=%v", a.GetId())) }>Edit</a>
 			<button
 				hx-delete={ fmt.Sprintf(_userSvcPath+"/DeleteUser?Id=%v", a.GetId()) }
 				hx-confirm="Delete this User?"
-				hx-target="closest tr"
+				hx-target="#user-list"
 				hx-swap="outerHTML"
+				hx-push-url="false"
 			>Delete</button>
 		</td>
 	</tr>
@@ -105,7 +106,6 @@ templ UserListMorePage(resp *api.ListUsersMoreResp, path string, pageSize int32)
 					<th>Id</th>
 					<th>Name</th>
 					<th>Age</th>
-					<th>Sex</th>
 					<th>Ctime</th>
 					<th>Mtime</th>
 					<th>Actions</th>
@@ -167,16 +167,12 @@ templ UserDetailView(a *api.User) {
 				<dd>{ fmt.Sprint(a.GetAge()) }</dd>
 			</div>
 			<div>
-				<dt>Sex</dt>
-				<dd>{ fmt.Sprint(a.GetSex()) }</dd>
-			</div>
-			<div>
 				<dt>Ctime</dt>
-				<dd>{ a.GetCtime().AsTime().Format(time.DateTime) }</dd>
+				<dd>{ fmt.Sprint(a.GetCtime()) }</dd>
 			</div>
 			<div>
 				<dt>Mtime</dt>
-				<dd>{ a.GetMtime().AsTime().Format(time.DateTime) }</dd>
+				<dd>{ fmt.Sprint(a.GetMtime()) }</dd>
 			</div>
 		</dl>
 		<div>
@@ -212,12 +208,12 @@ templ UserCreateView() {
 			<input type="number" id="Age" name="Age"/>
 		</div>
 		<div>
-			<label for="Sex">Sex</label>
-			<select id="Sex" name="Sex">
-				<option value="0">女</option>
-				<option value="1">男</option>
-				<option value="2">无</option>
-			</select>
+			<label for="Ctime">Ctime</label>
+			<input type="text" id="Ctime" name="Ctime"/>
+		</div>
+		<div>
+			<label for="Mtime">Mtime</label>
+			<input type="text" id="Mtime" name="Mtime"/>
 		</div>
 		<button type="submit">Create</button>
 	</form>
@@ -247,7 +243,7 @@ templ UserUpdateView(a *api.User) {
 		<div>
 			<label for="Id">Id</label>
 			<input
-				type="number"
+				type="text"
 				id="Id"
 				name="User.Id"
 				value={ fmt.Sprint(a.GetId()) }
@@ -277,29 +273,26 @@ templ UserUpdateView(a *api.User) {
 			<input type="checkbox" id="mask_3" name="Masks" value="3" hidden/>
 		</div>
 		<div>
-			<label for="User.Sex">Sex</label>
-			<select
-				id="User.Sex"
-				name="User.Sex"
+			<label for="User.Ctime">Ctime</label>
+			<input
+				type="text"
+				id="User.Ctime"
+				name="User.Ctime"
+				value={ fmt.Sprint(a.GetCtime()) }
 				hx-on:change="document.getElementById('mask_4').checked=true"
-			>
-				if a.GetSex() == 0 {
-					<option value="0" selected>女</option>
-				} else {
-					<option value="0">女</option>
-				}
-				if a.GetSex() == 1 {
-					<option value="1" selected>男</option>
-				} else {
-					<option value="1">男</option>
-				}
-				if a.GetSex() == 2 {
-					<option value="2" selected>无</option>
-				} else {
-					<option value="2">无</option>
-				}
-			</select>
+			/>
 			<input type="checkbox" id="mask_4" name="Masks" value="4" hidden/>
+		</div>
+		<div>
+			<label for="User.Mtime">Mtime</label>
+			<input
+				type="text"
+				id="User.Mtime"
+				name="User.Mtime"
+				value={ fmt.Sprint(a.GetMtime()) }
+				hx-on:change="document.getElementById('mask_5').checked=true"
+			/>
+			<input type="checkbox" id="mask_5" name="Masks" value="5" hidden/>
 		</div>
 		<button type="submit">Update</button>
 	</form>

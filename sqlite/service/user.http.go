@@ -5,8 +5,8 @@ import (
 
 	"github.com/goflower-io/golib/net/app"
 
-	"github.com/goflower-io/example/mysql/api"
-	"github.com/goflower-io/example/mysql/views"
+	"github.com/goflower-io/example/sqlite/api"
+	"github.com/goflower-io/example/sqlite/views"
 )
 
 // UserHandler wraps UserServiceServer with HTTP handlers.
@@ -276,13 +276,5 @@ func (h *UserHandler) DeleteUserHandle(w http.ResponseWriter, req *http.Request)
 		h.OnError(w, req, http.StatusInternalServerError, err)
 		return
 	}
-	switch app.ResponseConentType(req) {
-	case app.ResponseJSON:
-		app.NewWriter(w, req).JSONOk(map[string]string{"message": "User Deleted"})
-	case app.ResponseHTMX:
-		// Empty response: HTMX replaces the row (<tr>) with nothing, removing it from the DOM.
-		w.WriteHeader(http.StatusOK)
-	default:
-		h.OnSuccess(w, req, "User Deleted")
-	}
+	h.OnSuccess(w, req, "User Deleted")
 }

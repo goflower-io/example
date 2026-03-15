@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/goflower-io/golib/net/app"
 	"github.com/goflower-io/xsql"
 
 	"github.com/goflower-io/example/mysql/api"
@@ -35,6 +36,8 @@ func main() {
 	}
 	s := &service.UserServiceImpl{Client: db}
 	hs := service.NewUserHandler(s)
+	// Add middleware: recovery (panic → 500) + structured request logging.
+	hs.Middlewares = append(hs.Middlewares, app.RecoveryMiddle, app.LogMidddle)
 	mux := http.NewServeMux()
 	hs.AddPath(func(method, path string, hf http.HandlerFunc) {
 		fmt.Println(method + " " + path)

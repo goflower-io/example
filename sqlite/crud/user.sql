@@ -5,7 +5,7 @@ CREATE TABLE "user" (
     "ctime" integer NOT NULL,
     "mtime" integer NOT NULL,
     PRIMARY KEY ("id")
-);
+) strict;
 --id:'序号|text|validate:"oneof 1 2 3"'
 --name:'名称|text|validate:"max=100,min=10"'
 --age:'年龄|number|validate:"max=140,min=18"'
