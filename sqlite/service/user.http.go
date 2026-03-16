@@ -276,5 +276,13 @@ func (h *UserHandler) DeleteUserHandle(w http.ResponseWriter, req *http.Request)
 		h.OnError(w, req, http.StatusInternalServerError, err)
 		return
 	}
-	h.OnSuccess(w, req, "User Deleted")
+	switch app.ResponseConentType(req) {
+	case app.ResponseJSON:
+		app.NewWriter(w, req).JSONOk(map[string]string{"message": "User Deleted"})
+	case app.ResponseHTMX:
+		// Empty response: HTMX replaces the row (<tr>) with nothing, removing it from the DOM.
+		w.WriteHeader(http.StatusOK)
+	default:
+		h.OnSuccess(w, req, "User Deleted")
+	}
 }
