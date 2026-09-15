@@ -7,7 +7,7 @@ import (
 	"github.com/goflower-io/example/sqlite/crud/user"
 	"github.com/goflower-io/xsql"
 
-	"github.com/goflower-io/xsql/sqlite3"
+	sqlite "github.com/goflower-io/xsql/sqlite"
 )
 
 type Client struct {
@@ -48,7 +48,7 @@ func (tx *Tx) init() {
 }
 
 func NewClient(config *xsql.Config, debug bool) (*Client, error) {
-	db, err := sqlite3.NewDB(config)
+	db, err := sqlite.NewDB(config)
 	if err != nil {
 		return nil, err
 	}
@@ -61,6 +61,12 @@ func NewClientWithDB(db *xsql.DB, debug bool) *Client {
 	c := &Client{config: db.Config(), db: db, debug: debug}
 	c.init()
 	return c
+}
+
+// DB exposes the underlying xsql.DB, e.g. for custom SQL, read-write routing,
+// or connection pool tuning.
+func (c *Client) DB() *xsql.DB {
+	return c.db
 }
 
 func (c *Client) Begin(ctx context.Context) (*Tx, error) {
