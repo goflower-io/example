@@ -7,6 +7,7 @@ import (
 
 	"github.com/goflower-io/xsql"
 	"github.com/goflower-io/xsql/dialect"
+	"github.com/goflower-io/xsql/postgres"
 	"maps"
 	"slices"
 )
@@ -81,7 +82,7 @@ func (u *User) ScanDst(aa any, columns []string) []any {
 			case Age:
 				dst = append(dst, &a.Age)
 			case Address:
-				dst = append(dst, xsql.PgxMap().SQLScanner(&a.Address))
+				dst = append(dst, postgres.PgxMap().SQLScanner(&a.Address))
 			case Ctime:
 				dst = append(dst, &a.Ctime)
 			case Mtime:
